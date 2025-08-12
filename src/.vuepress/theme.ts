@@ -219,7 +219,10 @@ export default hopeTheme({
     comment: {
       provider: "Giscus",
       // serverURL: "https://waline-comment.vuejs.press",
-
+      // repo: ,
+      // repoId: ,
+      // category: ,
+      // categoryId: 
     },
 
     components: {
