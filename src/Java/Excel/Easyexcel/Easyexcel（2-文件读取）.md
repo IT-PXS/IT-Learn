@@ -20,7 +20,6 @@ date: 2024-10-27 12:42:19
   - [读取多个 Sheet](#读取多个-sheet)
   - [分批读取](#分批读取)
   - [事务操作](#事务操作)
-- [最佳实践](#最佳实践)
 
 ## 🔄 读取方式对比
 
@@ -33,7 +32,8 @@ date: 2024-10-27 12:42:19
 
 ### 读取单个 Sheet
 
-使用 `doReadSync()` 方法实现同步读取，适用于小文件处理。
+1. 通过 `sheet()` 方法指定对应的 Sheet 名称或下标读取文件信息
+2. 使用 `doReadSync()` 方法实现同步读取，适用于小文件处理。
 
 **实体类定义**
 
@@ -66,7 +66,7 @@ public class ExcelReadController {
      * 同步读取单个 Sheet
      */
     @PostMapping("/uploadFile")
-    public ResponseEntity<String> uploadFile(MultipartFile file) {
+    public void uploadFile(MultipartFile file) {
         try (InputStream in = file.getInputStream()) {
             List<UserExcel> userExcelList = EasyExcel.read(in)
                     .sheet(0)                    // 读取第一个 sheet
@@ -74,13 +74,11 @@ public class ExcelReadController {
                     .head(UserExcel.class)       // 指定实体类
                     .doReadSync();               // 同步读取
             
-            log.info("成功读取 {} 条数据", userExcelList.size());
-            return ResponseEntity.ok("读取成功，共 " + userExcelList.size() + " 条数据");
-            
+            for (UserExcel userExcel : userExcelList) {
+                System.out.println(userExcel);
+            }
         } catch (Exception e) {
-            log.error("文件读取失败", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("文件读取失败：" + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
@@ -88,11 +86,11 @@ public class ExcelReadController {
 
 ### 读取多个 Sheet（同一对象）
 
-使用 `doReadAllSync()` 方法读取所有 Sheet，适用于每个 Sheet 结构相同的情况。
+使用 `doReadAllSync()` 方法读取所有 Sheet，适用于每个 Sheet 对象结构相同的情况。
 
 ```java
 @PostMapping("/uploadFile2")
-public ResponseEntity<String> uploadFile2(MultipartFile file) {
+public void uploadFile2(MultipartFile file) {
     try (InputStream in = file.getInputStream()) {
         List<UserExcel> userExcelList = EasyExcel.read(in)
                 .headRowNumber(1)            // 跳过第一行标题
@@ -100,58 +98,60 @@ public ResponseEntity<String> uploadFile2(MultipartFile file) {
                 .doReadAllSync();            // 读取所有 Sheet
         
         log.info("成功读取 {} 条数据", userExcelList.size());
-        return ResponseEntity.ok("读取成功，共 " + userExcelList.size() + " 条数据");
-        
+        for (UserExcel userExcel : userExcelList) {
+            System.out.println(userExcel);
+        }
     } catch (Exception e) {
-        log.error("文件读取失败", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("文件读取失败：" + e.getMessage());
+        e.printStackTrace();
     }
 }
 ```
 
 ### 读取多个 Sheet（不同对象）
 
-当不同 Sheet 结构不同时，需要分别读取每个 Sheet。
+当不同 Sheet 结构不同时，使用 `doReadAllSync` 方法无法指定每个 Sheet 的对象，需要分别读取每个 Sheet 进行解析。
 
-> ⚠️ **注意**：一个流对象只能读取一次，重复使用会导致异常。
+> ⚠️ **注意**：依次读取 Sheet 会出现重复读取流对象的情况，一个流对象只能读取一次，重复使用会导致异常。
 
 ```java
 @PostMapping("/uploadFile4")
-public ResponseEntity<String> uploadFile4(MultipartFile file) {
+public void uploadFile4(MultipartFile file) {
+    InputStream in = null;
     try {
-        // 读取第一个 Sheet
-        List<UserExcel> userExcelList1;
-        try (InputStream in1 = file.getInputStream()) {
-            userExcelList1 = EasyExcel.read(in1)
-                    .sheet(0)
-                    .headRowNumber(1)
-                    .head(UserExcel.class)
-                    .doReadSync();
-        }
+        in = file.getInputStream();
+        List<UserExcel> userExcelList1 = EasyExcel.read(in)
+                // 读取第一个 sheet
+                .sheet(0)
+                // 如果第一行才是标题，第二行是数据，从第二行开始读取
+                .headRowNumber(1)
+                .head(UserExcel.class)
+                .doReadSync();
 
-        // 读取第二个 Sheet
-        List<UserExcel> userExcelList2;
-        try (InputStream in2 = file.getInputStream()) {
-            userExcelList2 = EasyExcel.read(in2)
-                    .sheet(1)
-                    .headRowNumber(1)
-                    .head(UserExcel.class)
-                    .doReadSync();
-        }
+        in = file.getInputStream();
+        List<UserExcel> userExcelList2 = EasyExcel.read(in)
+                // 读取第二个 sheet
+                .sheet(1)
+                // 如果第一行才是标题，第二行是数据，从第二行开始读取
+                .headRowNumber(1)
+                .head(UserExcel.class)
+                .doReadSync();
 
-        // 合并结果
-        List<UserExcel> allData = new ArrayList<>();
-        allData.addAll(userExcelList1);
-        allData.addAll(userExcelList2);
-        
-        log.info("成功读取 {} 条数据", allData.size());
-        return ResponseEntity.ok("读取成功，共 " + allData.size() + " 条数据");
-        
+        List<UserExcel> userExcelList = new ArrayList<>();
+        userExcelList.addAll(userExcelList1);
+        userExcelList.addAll(userExcelList2);
+        for (UserExcel userExcel : userExcelList) {
+            System.out.println(userExcel);
+        }
     } catch (Exception e) {
-        log.error("文件读取失败", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("文件读取失败：" + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if (in != null) {
+                in.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 ```
@@ -230,7 +230,7 @@ EasyExcel 提供了两种异常类型来处理不同的错误情况。
 
 #### ExcelDataConvertException
 
-数据转换异常，出现时继续解析文件。
+数据转换异常，出现该异常时会继续解析文件信息。
 
 ```java
 @Getter
@@ -328,20 +328,15 @@ public class UserExcelListener1 extends AnalysisEventListener<Map<Integer, Strin
 
 ```java
 @PostMapping("/uploadFile1")
-public ResponseEntity<String> uploadFile1(MultipartFile file) {
+public void uploadFile1(MultipartFile file) {
     try (InputStream in = file.getInputStream()) {
         UserExcelListener1 listener = new UserExcelListener1();
         EasyExcel.read(in, listener)
                 .sheet(0)
-                .headRowNumber(1) // 第一行是标题，从第二行开始读取
+                .headRowNumber(1) // 第一行是标题, 从第二行开始读取
                 .doRead();
-        
-        return ResponseEntity.ok("异步读取完成");
-        
     } catch (Exception e) {
-        log.error("文件读取失败", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("文件读取失败：" + e.getMessage());
+        e.printStackTrace();
     }
 }
 ```
@@ -386,25 +381,24 @@ public class UserExcelListener extends AnalysisEventListener<UserExcel> {
 
 ```java
 @PostMapping("/uploadFile5")
-public ResponseEntity<String> uploadFile5(MultipartFile file) {
+public void uploadFile5(MultipartFile file) {
     try (InputStream in = file.getInputStream()) {
         UserExcelListener listener = new UserExcelListener();
         EasyExcel.read(in, UserExcel.class, listener)
                 .sheet(0)
-                .headRowNumber(1) // 第一行是标题，从第二行开始读取
+                .headRowNumber(1) // 第一行是标题, 从第二行开始读取
                 .doRead();
-        
-        return ResponseEntity.ok("异步读取完成");
-        
     } catch (Exception e) {
-        log.error("文件读取失败", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("文件读取失败：" + e.getMessage());
+        e.printStackTrace();
     }
 }
 ```
 
 ### 读取多个 Sheet
+
+1. 获取 Sheet 的总数，通过循环遍历的方式指定每个 Sheet 的监听器进行解析
+2. 使用构造器的方式传入 Sheet 对应的下标，在抛出异常时获取 SheetNo 和对应的行号，方便进行排查
+
 
 ```java
 public class UserExcelListener2 extends AnalysisEventListener<UserExcel> {
@@ -449,7 +443,7 @@ public class UserExcelListener2 extends AnalysisEventListener<UserExcel> {
 
 ```java
 @PostMapping("/uploadFile6")
-public ResponseEntity<String> uploadFile6(MultipartFile file) {
+public void uploadFile6(MultipartFile file) {
     try (InputStream in = file.getInputStream();
          ExcelReader build = EasyExcel.read(in).build()) {
         
@@ -466,13 +460,8 @@ public ResponseEntity<String> uploadFile6(MultipartFile file) {
             build.read(sheet);
         }
         build.finish();
-        
-        return ResponseEntity.ok("多 Sheet 异步读取完成");
-        
     } catch (Exception e) {
-        log.error("文件读取失败", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("文件读取失败：" + e.getMessage());
+        e.printStackTrace();
     }
 }
 ```
@@ -480,6 +469,10 @@ public ResponseEntity<String> uploadFile6(MultipartFile file) {
 ### 分批读取
 
 使用线程池进行分批处理，避免内存消耗，加快文件解析入库。
+
+1. 使用构造器的方式传入 Sheet 对应的下标和自定义线程池，使用这种分批处理的方式，避免内存的消耗，加快文件的解析入库
+2. 数据库入库时可以使用 MySQL 的批量插入语法，同时指定每次插入数据的大小，相较于 MyBatisPlus 的批量插入方法较快
+
 
 ```java
 /**
@@ -562,7 +555,7 @@ public class UserExcelListener3 extends AnalysisEventListener<UserExcel> {
 
 ```java
 @PostMapping("/uploadFile7")
-public ResponseEntity<String> uploadFile7(MultipartFile file) {
+public void uploadFile7(MultipartFile file) {
     try (InputStream in = file.getInputStream();
          ExcelReader build = EasyExcel.read(in).build()) {
 
@@ -586,16 +579,8 @@ public ResponseEntity<String> uploadFile7(MultipartFile file) {
             build.read(sheet);
         }
         build.finish();
-        
-        // 关闭线程池
-        executor.shutdown();
-        
-        return ResponseEntity.ok("分批处理完成");
-        
     } catch (Exception e) {
-        log.error("文件读取失败", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("文件读取失败：" + e.getMessage());
+        e.printStackTrace();
     }
 }
 ```
@@ -693,127 +678,3 @@ public class TestDataListener extends AnalysisEventListener<Test> {
     }
 }
 ```
-
-## 💡 最佳实践
-
-### 1. 读取方式选择
-
-| 场景 | 推荐方式 | 原因 |
-|------|----------|------|
-| 小文件（< 1MB） | 同步读取 | 简单快速，代码清晰 |
-| 大文件（> 1MB） | 异步读取 | 内存占用小，性能更好 |
-| 需要实时处理 | 异步读取 | 支持流式处理 |
-| 批量导入 | 分批读取 | 避免内存溢出 |
-
-### 2. 性能优化建议
-
-- **合理设置批处理大小**：根据内存和数据库性能调整 `BATCH_SIZE`
-- **使用线程池**：避免频繁创建线程，提高并发性能
-- **及时清理数据**：处理完数据后及时清理，避免内存泄漏
-- **异常处理**：合理处理异常，避免程序中断
-
-### 3. 代码示例
-
-**完整的文件上传控制器**
-
-```java
-@RestController
-@RequestMapping("/excel")
-@Slf4j
-public class ExcelUploadController {
-
-    @Autowired
-    private UserService userService;
-
-    /**
-     * 文件上传并读取
-     */
-    @PostMapping("/upload")
-    public ResponseEntity<ApiResponse<String>> uploadExcel(@RequestParam("file") MultipartFile file) {
-        try {
-            // 文件验证
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest()
-                        .body(ApiResponse.error("文件不能为空"));
-            }
-
-            String fileName = file.getOriginalFilename();
-            if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
-                return ResponseEntity.badRequest()
-                        .body(ApiResponse.error("只支持 Excel 文件"));
-            }
-
-            // 根据文件大小选择读取方式
-            if (file.getSize() < 1024 * 1024) { // 小于 1MB
-                return syncRead(file);
-            } else {
-                return asyncRead(file);
-            }
-
-        } catch (Exception e) {
-            log.error("文件上传处理失败", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error("文件处理失败：" + e.getMessage()));
-        }
-    }
-
-    /**
-     * 同步读取
-     */
-    private ResponseEntity<ApiResponse<String>> syncRead(MultipartFile file) throws IOException {
-        try (InputStream in = file.getInputStream()) {
-            List<UserExcel> userExcelList = EasyExcel.read(in)
-                    .sheet(0)
-                    .headRowNumber(1)
-                    .head(UserExcel.class)
-                    .doReadSync();
-
-            // 保存到数据库
-            userService.saveBatch(userExcelList);
-
-            return ResponseEntity.ok(ApiResponse.success("同步读取完成，共处理 " + userExcelList.size() + " 条数据"));
-        }
-    }
-
-    /**
-     * 异步读取
-     */
-    private ResponseEntity<ApiResponse<String>> asyncRead(MultipartFile file) throws IOException {
-        try (InputStream in = file.getInputStream()) {
-            UserExcelListener listener = new UserExcelListener();
-            EasyExcel.read(in, UserExcel.class, listener)
-                    .sheet(0)
-                    .headRowNumber(1)
-                    .doRead();
-
-            return ResponseEntity.ok(ApiResponse.success("异步读取完成"));
-        }
-    }
-}
-
-/**
- * API 响应封装
- */
-@Data
-@AllArgsConstructor
-public class ApiResponse<T> {
-    private boolean success;
-    private String message;
-    private T data;
-
-    public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(true, "操作成功", data);
-    }
-
-    public static <T> ApiResponse<T> success(String message) {
-        return new ApiResponse<>(true, message, null);
-    }
-
-    public static <T> ApiResponse<T> error(String message) {
-        return new ApiResponse<>(false, message, null);
-    }
-}
-```
-
-通过以上优化，文档现在具有更好的结构、更清晰的示例和更实用的最佳实践指导。
-

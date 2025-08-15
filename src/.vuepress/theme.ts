@@ -13,9 +13,19 @@ export default hopeTheme({
 
   logo: "https://theme-hope-assets.vuejs.press/logo.svg",
 
-  repo: "vuepress-theme-hope/vuepress-theme-hope",
+  repo: "IT-PXS/IT-Learn",
+  // 默认从 `repo` 内容中推断为以下之一：
+  // "GitHub" / "GitLab" / "Gitee" / "Bitbucket" / "Source"
+  repoLabel: "GitHub",
+  repoDisplay: true,
 
   docsDir: "src",
+
+  navbarLayout: {
+    start: ["Brand"],
+    center: ["Links"],
+    end: ["Language", "Repo", "Outlook", "Search"],
+  },
 
   blog: {
     medias: {
@@ -212,6 +222,39 @@ export default hopeTheme({
       // 搜索高亮
       isSearchable: (page) => page.path !== "/",
     },
+    // 通过 `backToTop: false` 禁用返回顶部按钮
+    // 或自定义返回顶部按钮
+    backToTop: {
+      /**
+       * 显示返回顶部按钮的滚动阈值距离（以像素为单位）
+       *
+       * @default 100
+       */
+      threshold: 500,
+      /**
+       * 是否显示滚动进度
+       *
+       * @default true
+       */
+      progress: true,
+    },
+    // notice: [
+    //   {
+    //     path: "/",
+    //     title: "Notice Title",
+    //     content: "Notice Content",
+    //     actions: [
+    //       {
+    //         text: "Primary Action",
+    //         link: "https://theme-hope.vuejs.press/",
+    //         type: "primary",
+    //       },
+    //       { text: "Default Action" },
+    //     ],
+    //   },
+    // ],
+    watermark: true,
+    copyright: true,
 
     // Install @waline/client before enabling it
     // Note: This is for testing ONLY!
@@ -219,10 +262,25 @@ export default hopeTheme({
     comment: {
       provider: "Giscus",
       // serverURL: "https://waline-comment.vuejs.press",
-      // repo: ,
-      // repoId: ,
-      // category: ,
-      // categoryId: 
+      repo: "IT-PXS/IT-Learn",
+      repoId: "R_kgDOPcw8wQ",
+      category: "Announcements",
+      categoryId: "DIC_kwDOPcw8wc4CuIbN"
+      //       <script src="https://giscus.app/client.js"
+      //         data-repo="IT-PXS/IT-Learn"
+      //         data-repo-id="R_kgDOPcw8wQ"
+      //         data-category="Announcements"
+      //         data-category-id="DIC_kwDOPcw8wc4CuIbN"
+      //         data-mapping="pathname"
+      //         data-strict="0"
+      //         data-reactions-enabled="1"
+      //         data-emit-metadata="0"
+      //         data-input-position="bottom"
+      //         data-theme="preferred_color_scheme"
+      //         data-lang="zh-CN"
+      //         crossorigin="anonymous"
+      //         async>
+      // </script>
     },
 
     components: {
