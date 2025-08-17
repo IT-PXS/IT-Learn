@@ -55,9 +55,11 @@ date: 2024-10-26 12:42:19
 
 > **优先级说明**：index > order > value > 默认配置
 
-#### 1. value 属性 - 指定列头
+#### value - 指定列头
 
 **基础用法**
+
+指定当前字段对应 excel 中的那一列，可以根据名字或者 Index 去匹配，当然也可以不写。
 
 
 ```java
@@ -131,7 +133,7 @@ public class User {
 
 ![](Easyexcel（1-注解使用）/2.png)
 
-**多级表头**
+**多级表头（表头合并）**
 
 ```java
 @Data
@@ -155,7 +157,9 @@ public class User {
 
 ![](Easyexcel（1-注解使用）/3.png)
 
-#### 2. index 属性 - 指定绝对位置
+#### index - 指定绝对位置
+
+`@ExcelProperty` 注解有两个属性 index 和 order，如果不指定则按照属性在类中的排列顺序来。index 是指定该属性在 Excel 中列的下标，下标从 0 开始
 
 ```java
 @Data
@@ -177,9 +181,34 @@ public class User {
 }
 ```
 
+![](Easyexcel（1-注解使用）/5.png)
+
+```java
+@Data
+public class User {
+    @ExcelProperty(value = "用户Id", index = 2)
+    private Integer userId;
+    
+    @ExcelProperty(value = "姓名", index = 1)
+    private String name;
+    
+    @ExcelProperty(value = "手机", index = 10)
+    private String phone;
+    
+    @ExcelProperty(value = "邮箱", index = 12)
+    private String email;
+    
+    @ExcelProperty(value = "创建时间")
+    private Date createTime;
+}
+```
+
 ![](Easyexcel（1-注解使用）/6.png)
 
-#### 3. order 属性 - 指定相对顺序
+#### order - 指定相对顺序
+
+order 的默认值为 Integer.MAX_VALUE，通过效果我们可以得出结论：order 值越小，越排在前面
+
 
 ```java
 @Data
@@ -203,40 +232,45 @@ public class User {
 
 ![](Easyexcel（1-注解使用）/7.png)
 
-#### 4. converter 属性 - 自定义转换器
+#### converter - 自定义转换器
 
 **日期时间转换器**
+
+在读写 EXCEL 时，有时候需要我们进行数据类型转换，例如我们这里的创建时间，在实体对象中是 Long 类型，但是这样直接导出到 Excel 中不太直观。我们需要转换成 yyyy-MM-dd HH: mm: ss 格式，此时我们就可以用到转换器。
+
 
 ```java
 public class DateTimeConverter implements Converter<Long> {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    // 支持导入的Java类型
     @Override
     public Class<?> supportJavaTypeKey() {
         return Long.class;
     }
 
+    // 支持导出的Excel类型
     @Override
     public CellDataTypeEnum supportExcelTypeKey() {
         return CellDataTypeEnum.STRING;
     }
 
+    // 转换为Java
     @Override
-    public Long convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, 
-                                 GlobalConfiguration globalConfiguration) throws Exception {
+    public Long convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
         return null;
     }
 
+    // 转换为Excel
     @Override
-    public WriteCellData<?> convertToExcelData(Long value, ExcelContentProperty contentProperty, 
-                                              GlobalConfiguration globalConfiguration) throws Exception {
+    public WriteCellData<?> convertToExcelData(Long value, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
         if (value == null) {
-            return new WriteCellData<>(CellDataTypeEnum.STRING, null);
+            return new WriteCellData(CellDataTypeEnum.STRING, null);
         }
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.systemDefault());
-        String dateStr = localDateTime.format(formatter);
-        return new WriteCellData<>(dateStr);
+        String dateStr = localDateTime.format(dateTimeFormatter);
+        return new WriteCellData(dateStr);
     }
 }
 ```

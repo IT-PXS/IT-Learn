@@ -297,8 +297,6 @@ public class DefaultStyle extends HorizontalCellStyleStrategy {
 
 EasyExcel 的默认风格是，对于表头会显示灰色背景，但是如果取消使用默认风格之后，表头的背景颜色就会恢复白色。
 
-**控制默认样式：**
-
 EasyExcel 控制是否开启默认风格的属性方法是：`useDefaultStyle(false)`
 
 > ⚠️ **重要**：`useDefaultStyle` 方法一定要放在 `sheet` 方法前面，否则会失效（放在后面会因为在构造 `ExcelWriter` 类时获取不到 `useDefaultStyle` 的值，从而导致使用的是默认风格）
@@ -410,7 +408,6 @@ public class CustomExcelStyleUtil {
 
 ### 使用示例
 
-**实体类定义**
 
 ```java
 @Data
@@ -433,7 +430,6 @@ public class User {
 }
 ```
 
-**控制器实现**
 
 ```java
 /**

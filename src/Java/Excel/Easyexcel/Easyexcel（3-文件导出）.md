@@ -173,6 +173,8 @@ public void download2(HttpServletResponse response) {
 }
 ```
 
+通过WriteSheet对象可以指定要写入的Sheet，通过上面方式我们可以手工控制流的关闭，这样我们就可以实现多次写。可以实现分页查询获取数据，然后将数据写入Excel中，避免一次性加载的数据过多，导致内存溢出
+
 > 💡 **提示**：使用 `excelWriter.write` 方式时务必保证至少执行一次 `write`，这样是为了将 sheet 和表头写入 excel，否则打开 excel 时会报错。
 
 ### 自定义表头

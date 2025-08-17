@@ -87,7 +87,6 @@ public void download1(HttpServletResponse response) {
 
 ![](Easyexcel（4-模板文件）/1.png)
 
-**实体类定义**
 
 ```java
 @AllArgsConstructor
@@ -112,7 +111,6 @@ public class User {
 }
 ```
 
-**控制器实现**
 
 ```java
 /**
@@ -152,7 +150,6 @@ public void download5(HttpServletResponse response) {
 
 使用 `doFill` 方法填充对象列表数据到模板中。
 
-**控制器实现**
 
 ```java
 /**
@@ -198,7 +195,6 @@ EasyExcel 默认不支持对象嵌套对象的填充，需要进行特殊处理�
 
 ![](Easyexcel（4-模板文件）/3.png)
 
-**实体类定义**
 
 ```java
 @AllArgsConstructor
@@ -235,7 +231,6 @@ public class User {
 }
 ```
 
-**控制器实现**
 
 ```java
 /**
@@ -285,7 +280,7 @@ public void download3(HttpServletResponse response) {
 
 在 `com.alibaba.excel.write.executor` 包下创建 `ExcelWriteFillExecutor` 类，跟源码中的类名称一致，尝试修改 `analysisCell.getOnlyOneVariable()` 方法中的逻辑以便支持嵌套对象。
 
-**修改源码逻辑**
+根据分隔符`.`进行划分，循环获取对象中字段的数据，同时在 `FieldUtils.getFieldClass` 方法中重新设置 map 对象和字段
 
 ```java
 if (analysisCell.getOnlyOneVariable()) {
@@ -342,7 +337,6 @@ EasyExcel 默认不支持对象嵌套 List 的填充，需要通过自定义转�
 
 ![](Easyexcel（4-模板文件）/13.png)
 
-**实体类定义**
 
 ```java
 @AllArgsConstructor
@@ -370,7 +364,6 @@ public class User {
 }
 ```
 
-**控制器实现**
 
 ```java
 /**
@@ -408,7 +401,6 @@ public void download4(HttpServletResponse response) {
 
 对于 EasyExcel 默认不支持的数据类型（如 List），可以通过自定义转换器的方式修改导出的内容。
 
-**List转换器实现**
 
 ```java
 /**
@@ -442,7 +434,6 @@ public class ListConvert implements Converter<List> {
 }
 ```
 
-**使用自定义转换器**
 
 ```java
 @AllArgsConstructor
@@ -481,13 +472,12 @@ public class User {
 
 ### 简单Map填充
 
-使用 Map 对象填充模板数据，注意 Map 跟对象导出有所区别，最前面没有 `\.`。
+使用 Map 对象填充模板数据，注意 Map 跟对象导出有所区别，最前面没有 `.`。
 
 **模板文件示例**
 
 ![](Easyexcel（4-模板文件）/11.png)
 
-**控制器实现**
 
 ```java
 /**
@@ -528,13 +518,11 @@ public void download4(HttpServletResponse response) {
 
 ### 嵌套Map填充
 
-EasyExcel 不支持嵌套 Map 的方式导出数据。
 
 **模板文件示例**
 
 ![](Easyexcel（4-模板文件）/7.png)
 
-**控制器实现**
 
 ```java
 /**

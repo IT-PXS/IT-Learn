@@ -17,7 +17,6 @@ date: 2024-11-02 18:42:19
 - [自定义列宽策略](#自定义列宽策略)
   - [CustomWidthStyleStrategy 工具类](#customwidthstylestrategy-工具类)
   - [使用示例](#使用示例)
-  - [效果对比](#效果对比)
 
 ## 🎯 列宽设置概述
 
@@ -30,8 +29,6 @@ EasyExcel 提供了多种自定义列宽的方式，可以根据实际需求选�
 选择合适的列宽策略可以显著提升 Excel 文件的可读性和美观性，确保数据内容完整显示。
 
 ## 📝 注解方式设置列宽
-
-### @ColumnWidth 注解
 
 使用 `@ColumnWidth` 注解可以快速为指定字段设置固定列宽。
 
@@ -52,9 +49,8 @@ public class WidthAndHeightData {
 ```
 
 **注意事项：**
-- 注解方式只能固定设置列宽，无法动态调整
+- 注解方式只能固定设置列宽，无法动态调整，每次调整列宽需要重新修改代码
 - `@ColumnWidth` 的最大值只能为 255，超过 255*256 长度时会报错
-- 每次调整列宽需要重新修改代码
 
 **查看XSSFSheet源码**
 
@@ -66,7 +62,6 @@ public class WidthAndHeightData {
 
 ![类方法](Easyexcel（5-自定义列宽）/6.png)
 
-#### AbstractHeadColumnWidthStyleStrategy
 
 ```java
 public abstract class AbstractHeadColumnWidthStyleStrategy extends AbstractColumnWidthStyleStrategy {
@@ -104,7 +99,6 @@ public abstract class AbstractHeadColumnWidthStyleStrategy extends AbstractColum
 
 #### SimpleColumnWidthStyleStrategy
 
-**源码分析：**
 
 ```java
 public class SimpleColumnWidthStyleStrategy extends AbstractHeadColumnWidthStyleStrategy {
@@ -121,7 +115,7 @@ public class SimpleColumnWidthStyleStrategy extends AbstractHeadColumnWidthStyle
 }
 ```
 
-**使用示例：**
+#### 使用示例
 
 ```java
 @Data
@@ -184,7 +178,6 @@ public void download2(HttpServletResponse response) {
 
 #### LongestMatchColumnWidthStyleStrategy
 
-**源码分析：**
 
 ```java
 public class LongestMatchColumnWidthStyleStrategy extends AbstractColumnWidthStyleStrategy {
@@ -262,7 +255,7 @@ public class LongestMatchColumnWidthStyleStrategy extends AbstractColumnWidthSty
 **官方说明：**
 > ⚠️ **注意**：这个策略目前不是很好用，比如有数字就会导致换行。而且长度也不是刚好和实际长度一致。所以需要精确到刚好列宽的慎用。
 
-**使用示例：**
+#### 使用示例
 
 ```java
 /**
@@ -417,7 +410,7 @@ public class CustomWidthStyleStrategy extends AbstractColumnWidthStyleStrategy {
 
 ### 使用示例
 
-**根据表头宽度设置列宽：**
+1. 根据表头宽度设置列宽
 
 ```java
 /**
@@ -452,7 +445,10 @@ public void download3(HttpServletResponse response) {
 }
 ```
 
-**根据单元格内容设置列宽：**
+![表头宽度效果](Easyexcel（5-自定义列宽）/3.png)
+
+
+2. 根据单元格内容设置列宽
 
 ```java
 /**
@@ -486,13 +482,5 @@ public void download4(HttpServletResponse response) {
     }
 }
 ```
-
-### 效果对比
-
-**1. 根据表头宽度设置的列宽：**
-
-![表头宽度效果](Easyexcel（5-自定义列宽）/3.png)
-
-**2. 根据单元格内容设置的列宽：**
 
 ![单元格内容宽度效果](Easyexcel（5-自定义列宽）/4.png)

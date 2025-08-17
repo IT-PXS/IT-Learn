@@ -11,8 +11,8 @@ date: 2024-10-27 12:42:19
 - [读取方式对比](#读取方式对比)
 - [同步读取](#同步读取)
   - [读取单个 Sheet](#读取单个-sheet)
-  - [读取多个 Sheet（同一对象）](#读取多个-sheet同一对象)
-  - [读取多个 Sheet（不同对象）](#读取多个-sheet不同对象)
+  - [读取多个 Sheet（同一对象）](#读取多个-sheet（同一对象）)
+  - [读取多个 Sheet（不同对象）](#读取多个-sheet（不同对象）)
 - [异步读取](#异步读取)
   - [监听器接口](#监听器接口)
   - [异常处理](#异常处理)
@@ -35,7 +35,6 @@ date: 2024-10-27 12:42:19
 1. 通过 `sheet()` 方法指定对应的 Sheet 名称或下标读取文件信息
 2. 使用 `doReadSync()` 方法实现同步读取，适用于小文件处理。
 
-**实体类定义**
 
 ```java
 @Data
@@ -55,7 +54,6 @@ public class UserExcel {
 }
 ```
 
-**控制器实现**
 
 ```java
 @RestController
@@ -162,7 +160,7 @@ public void uploadFile4(MultipartFile file) {
 
 EasyExcel 提供了 `ReadListener` 接口和 `AnalysisEventListener` 抽象类来实现异步读取。
 
-**ReadListener 接口**
+#### ReadListener 接口
 
 ```java
 public interface ReadListener<T> extends Listener {
@@ -204,7 +202,7 @@ public interface ReadListener<T> extends Listener {
 }
 ```
 
-**AnalysisEventListener 抽象类**
+#### AnalysisEventListener 抽象类
 
 ```java
 public abstract class AnalysisEventListener<T> implements ReadListener<T> {
@@ -226,7 +224,6 @@ public abstract class AnalysisEventListener<T> implements ReadListener<T> {
 
 ### 异常处理
 
-EasyExcel 提供了两种异常类型来处理不同的错误情况。
 
 #### ExcelDataConvertException
 
@@ -323,6 +320,10 @@ public class UserExcelListener1 extends AnalysisEventListener<Map<Integer, Strin
     public List<Map<Integer, String>> getUserExcelList() {
         return userExcelList;
     }
+
+    public void setUserExcelList(List<Map<Integer, String>> userExcelList) {
+        this.userExcelList = userExcelList;
+    }
 }
 ```
 
@@ -375,6 +376,10 @@ public class UserExcelListener extends AnalysisEventListener<UserExcel> {
 
     public List<UserExcel> getUserExcelList() {
         return userExcelList;
+    }
+
+    public void setUserExcelList(List<UserExcel> userExcelList) {
+        this.userExcelList = userExcelList;
     }
 }
 ```
@@ -437,6 +442,10 @@ public class UserExcelListener2 extends AnalysisEventListener<UserExcel> {
 
     public List<UserExcel> getUserExcelList() {
         return userExcelList;
+    }
+
+    public void setUserExcelList(List<UserExcel> userExcelList) {
+        this.userExcelList = userExcelList;
     }
 }
 ```
@@ -587,7 +596,7 @@ public void uploadFile7(MultipartFile file) {
 
 ### 事务操作
 
-当使用监听器读取文件数据时，由于监听器不被 Spring 管理，无法使用 `@Transactional` 注解。可以通过构造器传入事务管理器来手动管理事务。
+当使用监听器读取文件数据时，由于监听器不被 Spring 管理，无法使用 `@Transactional` 注解。可以通过构造器传入事务管理器来手动管理事务，手动提交和回滚事务。
 
 ```java
 @Slf4j

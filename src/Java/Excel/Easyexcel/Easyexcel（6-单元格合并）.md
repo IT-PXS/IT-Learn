@@ -162,7 +162,7 @@ public class LoopMergeStrategy implements RowWriteHandler {
 
 通过 `registerWriteHandler` 方法设置单元格合并策略，用于指定某几列每相差几行进行单元格合并。
 
-**1. 指定单列合并**
+1. 指定单列合并
 
 ```java
 /**
@@ -216,7 +216,7 @@ public void download1(HttpServletResponse response) {
 
 ![单列循环合并效果](Easyexcel（6-单元格合并）/1.png)
 
-**2. 指定多列合并**
+2. 指定多列合并
 
 ```java
 /**
@@ -463,9 +463,8 @@ public class CustomMergeStrategy extends AbstractMergeStrategy {
 }
 ```
 
-#### 使用示例
 
-**1. 从首行开始合并单元格**
+1. 从首行开始合并单元格
 
 ```java
 /**
@@ -520,7 +519,7 @@ public void download3(HttpServletResponse response) {
 
 ![自定义策略1效果](Easyexcel（6-单元格合并）/4.png)
 
-**2. 从指定行开始合并单元格**
+2. 从指定行开始合并单元格
 
 ```java
 /**
@@ -698,8 +697,6 @@ public class EasyExcelUtil implements CellWriteHandler {
     }
 }
 ```
-
-#### 使用示例
 
 ```java
 /**
