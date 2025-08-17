@@ -1,6 +1,7 @@
 import { defineUserConfig } from "vuepress";
 
 import theme from "./theme.js";
+import { baiduAnalyticsPlugin } from '@vuepress/plugin-baidu-analytics'
 
 export default defineUserConfig({
   base: "/IT-Learn/",
@@ -30,4 +31,9 @@ export default defineUserConfig({
 
   // Enable it with pwa
   // shouldPrefetch: false,
+  plugins: [
+    baiduAnalyticsPlugin({
+      id: '22f9890054d18a4a0df8eeb8eafb976b',
+    }),
+  ]
 });

@@ -2,9 +2,12 @@ import { navbar } from "vuepress-theme-hope";
 
 export const zhNavbar = navbar([
   "/",
+  "/category/",
+  "/tag/",
+  "/timeline/",
   {
     text: "Java",
-    icon: "book",
+    // icon: "book",
     prefix: "/Java/",
     children: [
       // "SpringBoot",
@@ -12,16 +15,19 @@ export const zhNavbar = navbar([
       // "SpringSecurity",
       {
         text: "SpringBoot",
+        // icon: "leaf",
         prefix: "SpringBoot/",
         link: "SpringBoot/"
       },
       {
         text: "SpringCloud",
+        // icon: "cloud",
         prefix: "SpringCloud/",
         link: "SpringCloud/"
       },
       {
         text: "SpringSecurity",
+        // icon: "shield-alt",
         prefix: "SpringSecurity/",
         link: "SpringSecurity/"
       },
@@ -34,26 +40,30 @@ export const zhNavbar = navbar([
   },
   {
     text: "前端",
-    icon: "book",
+    // icon: "code",
     prefix: "/Front/",
     children: [
       {
-        text: "Html",
+        text: "HTML",
+        // icon: "file-code",
         prefix: "Html/",
         link: "Html/"
       },
       {
-        text: "Css",
+        text: "CSS",
+        // icon: "paint-brush",
         prefix: "Css/",
         link: "Css/"
       },
       {
         text: "JavaScript",
+        // icon: "js",
         prefix: "JavaScript/",
         link: "JavaScript/"
       },
       {
         text: "Vue",
+        // icon: "vuejs",
         prefix: "Vue/",
         link: "Vue/"
       }
@@ -61,16 +71,18 @@ export const zhNavbar = navbar([
   },
   {
     text: "数据库",
-    icon: "book",
+    // icon: "database",
     prefix: "/Database/",
     children: [
       {
-        text: "Mysql",
+        text: "MySQL",
+        // icon: "server",
         prefix: "Mysql/",
         link: "Mysql/"
       },
       {
         text: "Redis",
+        // icon: "memory",
         prefix: "Redis/",
         link: "Redis/"
       }

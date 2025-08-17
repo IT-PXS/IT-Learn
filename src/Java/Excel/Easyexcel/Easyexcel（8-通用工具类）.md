@@ -1,14 +1,32 @@
 ---
-title: Easyexcel（8-通用工具类）
+title: EasyExcel（8-通用工具类）
 tag: EasyExcel
 category: Java
 description: EasyExcel 提供了便捷的通用工具类，帮助用户简化Excel读写操作。通过工具类，用户可以实现快速的文件读取、写入、模板填充等功能，同时支持大数据量的高效处理。工具类封装了常用方法，减少了代码量，提升了开发效率，是Excel操作的高效解决方案。
 date: 2024-11-06 18:42:19
 ---
 
-## EasyExcelUtils
+## 📋 目录
 
-提供常见的文件同步和异步读取、文件导出、模板填充、自定义表头、自定义内容、从指定行开始读取数据、多Sheet导出等方法
+- [通用工具类概述](#通用工具类概述)
+- [EasyExcelUtils 工具类](#easyexcelutils-工具类)
+- [EasyExcelWriterFactory 工厂类](#easyexcelwriterfactory-工厂类)
+- [ExcelListener 监听器](#excellistener-监听器)
+- [使用案例](#使用案例)
+
+## 🎯 通用工具类概述
+
+EasyExcel 提供了丰富的通用工具类，帮助用户简化 Excel 读写操作：
+
+- **EasyExcelUtils**：提供常见的文件同步和异步读取、文件导出、模板填充、自定义表头、自定义内容、从指定行开始读取数据、多Sheet导出等方法
+- **EasyExcelWriterFactory**：文件导出和模板填充实现多Sheet写入（链式使用）
+- **ExcelListener**：文件读取大数据和多Sheet导入监听器（使用线程池和批量插入方法）
+
+通过合理使用这些工具类，可以显著提升开发效率，减少重复代码，实现高效的 Excel 操作。
+
+## 🛠️ EasyExcelUtils 工具类
+
+提供常见的文件同步和异步读取、文件导出、模板填充、自定义表头、自定义内容、从指定行开始读取数据、多Sheet导出等方法。
 
 ```java
 public class EasyExcelUtils {
@@ -765,7 +783,7 @@ public class EasyExcelUtils {
 }
 ```
 
-## EasyExcelWriterFactory
+## 🔧 EasyExcelWriterFactory 工厂类
 
 文件导出和模板填充实现多Sheet写入（链式使用）
 
@@ -834,7 +852,7 @@ public class EasyExcelWriterFactory {
 }
 ```
 
-## ExcelListener
+## 📊 ExcelListener 监听器
 
 文件读取大数据和多Sheet导入监听器（使用线程池和批量插入方法）
 
@@ -894,72 +912,93 @@ public class ExcelListener extends AnalysisEventListener<T> {
 }
 ```
 
-## 使用案例
+## 💡 使用案例
 
 ```java
+/**
+ * 基础导出示例
+ */
 @GetMapping("/download1")
 public void download1(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user = new User();
         user.setUserId(123);
         user.setName("as");
         user.setPhone("15213");
         user.setEmail("5456");
         user.setCreateTime(new Date());
+        
+        // 使用工具类导出
         EasyExcelUtils.write(response.getOutputStream(), User.class, Arrays.asList(user));
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("基础导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 
+/**
+ * 指定Sheet导出示例
+ */
 @GetMapping("/download2")
 public void download2(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user = new User();
         user.setUserId(123);
         user.setName("as");
         user.setPhone("15213");
         user.setEmail("5456");
         user.setCreateTime(new Date());
+        
+        // 使用工具类导出到指定Sheet
         EasyExcelUtils.write(response.getOutputStream(), User.class, Arrays.asList(user), 2);
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("指定Sheet导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 
+/**
+ * 多Sheet导出示例
+ */
 @GetMapping("/download3")
 public void download3(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user = new User();
         user.setUserId(123);
         user.setName("as");
         user.setPhone("15213");
         user.setEmail("5456");
         user.setCreateTime(new Date());
+        
+        // 使用工具类进行多Sheet导出
         EasyExcelUtils.writeWithSheets(response.getOutputStream())
                 .writeModel(User.class, Arrays.asList(user))
                 .writeModel(User.class, Arrays.asList(user))
                 .finish();
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("多Sheet导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```

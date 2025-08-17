@@ -4,11 +4,11 @@ import { enNavbar, zhNavbar } from "./navbar/index.js";
 import { enSidebar, zhSidebar } from "./sidebar/index.js";
 
 export default hopeTheme({
-  hostname: "https://mister-hope.github.io",
+  hostname: "https://it-pxs.github.io/IT-Learn/",
 
   author: {
     name: "爱编程的小生",
-    url: "https://mister-hope.com",
+    url: "https://it-pxs.github.io/IT-Learn/",
   },
 
   logo: "https://theme-hope-assets.vuejs.press/logo.svg",
@@ -29,7 +29,7 @@ export default hopeTheme({
 
   blog: {
     medias: {
-      Baidu: "https://example.com",
+      // Baidu: "https://example.com",
       // BiliBili: "https://example.com",
       // Bitbucket: "https://example.com",
       // Dingding: "https://example.com",
@@ -40,7 +40,7 @@ export default hopeTheme({
       // Facebook: "https://example.com",
       // Flipboard: "https://example.com",
       // Gitee: "https://example.com",
-      // GitHub: "https://example.com",
+      GitHub: "https://github.com/IT-PXS/IT-Learn",
       // Gitlab: "https://example.com",
       // Gmail: "mailto:info@example.com",
       // Instagram: "https://example.com",
@@ -49,7 +49,7 @@ export default hopeTheme({
       // Linkedin: "https://example.com",
       // Pinterest: "https://example.com",
       // Pocket: "https://example.com",
-      // QQ: "https://example.com",
+      // QQ: "3032428600@qq.com",
       // Qzone: "https://example.com",
       // Reddit: "https://example.com",
       // Rss: "https://example.com",
@@ -253,7 +253,7 @@ export default hopeTheme({
     //     ],
     //   },
     // ],
-    watermark: true,
+    watermark: false,
     copyright: true,
 
     // Install @waline/client before enabling it

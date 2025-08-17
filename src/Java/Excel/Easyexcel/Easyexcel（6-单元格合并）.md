@@ -1,19 +1,43 @@
 ---
-title: Easyexcel（6-单元格合并）
+title: EasyExcel（6-单元格合并）
 tag: EasyExcel
 category: Java
 description: EasyExcel在数据导出时，自定义单元格合并功能极大地增强了数据的可读性和组织性。通过 WriteSheet 对象，用户可以轻松实现单元格合并，指定合并区域的起始和结束行列，从而将相关信息整合在一起。
 date: 2024-11-03 18:42:19
 ---
 
-## 注解
+## 📋 目录
 
-### @ContentLoopMerge
+- [单元格合并概述](#单元格合并概述)
+- [注解方式设置合并](#注解方式设置合并)
+  - [@ContentLoopMerge 注解](#contentloopmerge-注解)
+  - [@OnceAbsoluteMerge 注解](#onceabsolutemerge-注解)
+- [策略方式设置合并](#策略方式设置合并)
+  - [LoopMergeStrategy 循环合并策略](#loopmergestrategy-循环合并策略)
+  - [OnceAbsoluteMergeStrategy 绝对位置合并策略](#onceabsolutemergestrategy-绝对位置合并策略)
+- [自定义合并策略](#自定义合并策略)
+  - [AbstractMergeStrategy 抽象合并策略](#abstractmergestrategy-抽象合并策略)
+  - [CellWriteHandler 单元格写入处理器](#cellwritehandler-单元格写入处理器)
 
-用于设置合并单元格的注解，作用于字段上
+## 🎯 单元格合并概述
 
-1. eachRow：每隔几行合并
-2. columnExtend：合并列的下标
+EasyExcel 提供了多种单元格合并的方式，可以根据实际需求选择合适的策略：
+
+- **注解方式**：使用 `@ContentLoopMerge` 和 `@OnceAbsoluteMerge` 注解快速设置合并
+- **策略方式**：使用不同的合并策略类实现复杂的合并逻辑
+- **自定义策略**：继承抽象类或实现接口实现自定义合并逻辑
+
+单元格合并功能可以显著提升 Excel 文件的可读性和组织性，特别适用于需要将相关信息整合在一起的场景。
+
+## 📝 注解方式设置合并
+
+### @ContentLoopMerge 注解
+
+用于设置循环合并单元格的注解，作用于字段上。
+
+**参数说明：**
+- `eachRow`：每隔几行合并
+- `columnExtend`：合并列的下标
 
 ```java
 @AllArgsConstructor
@@ -39,16 +63,15 @@ public class User {
 }
 ```
 
+### @OnceAbsoluteMerge 注解
 
+用于指定位置的单元格合并，作用于类上。
 
-### @OnceAbsoluteMerge
-
-用于指定位置的单元格合并，作用于类上
-
-1. firstRowIndex：第一行下标
-2. lastRowIndex：最后一行下标
-3. firstColumnIndex：第一列下标
-4. lastColumnIndex：最后一列下标
+**参数说明：**
+- `firstRowIndex`：第一行下标
+- `lastRowIndex`：最后一行下标
+- `firstColumnIndex`：第一列下标
+- `lastColumnIndex`：最后一列下标
 
 ```java
 @OnceAbsoluteMerge(firstColumnIndex = 0, lastColumnIndex = 0, firstRowIndex = 1, lastRowIndex = 2)
@@ -74,11 +97,11 @@ public class User {
 }
 ```
 
-## 类方法
+## 🔧 策略方式设置合并
 
-### LoopMergeStrategy
+### LoopMergeStrategy 循环合并策略
 
-#### 源码查看
+#### 源码分析
 
 ```java
 public class LoopMergeStrategy implements RowWriteHandler {
@@ -135,22 +158,26 @@ public class LoopMergeStrategy implements RowWriteHandler {
 }
 ```
 
-#### 基本使用
+#### 使用示例
 
-通过 registerWriteHandler 方法设置单元格合并策略，用于指定某几列每相差几行进行单元格合并
+通过 `registerWriteHandler` 方法设置单元格合并策略，用于指定某几列每相差几行进行单元格合并。
 
-1. 指定单列合并
+**1. 指定单列合并**
 
 ```java
+/**
+ * 单列循环合并导出
+ */
 @GetMapping("/download1")
 public void download1(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user1 = new User();
         user1.setUserId(123);
         user1.setName("as");
@@ -179,25 +206,32 @@ public void download1(HttpServletResponse response) {
                 .sheet("模板")
                 .doWrite(Arrays.asList(user1, user2, user3));
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("单列循环合并导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```
 
-![](Easyexcel（6-单元格合并）/1.png)
+**效果展示：**
 
-2. 指定多列合并
+![单列循环合并效果](Easyexcel（6-单元格合并）/1.png)
+
+**2. 指定多列合并**
 
 ```java
+/**
+ * 多列循环合并导出
+ */
 @GetMapping("/download1")
 public void download1(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user1 = new User();
         user1.setUserId(123);
         user1.setName("as");
@@ -218,6 +252,7 @@ public void download1(HttpServletResponse response) {
         user3.setPhone("46543213");
         user3.setEmail("5456");
         user3.setCreateTime(new Date());
+        
         // 第2列开始每隔2行合并一次，从第2列开始的两列进行合并
         LoopMergeStrategy loopMergeStrategy = new LoopMergeStrategy(2, 2, 2);
         EasyExcel.write(response.getOutputStream(), User.class)
@@ -225,16 +260,19 @@ public void download1(HttpServletResponse response) {
                 .sheet("模板")
                 .doWrite(Arrays.asList(user1, user2, user3));
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("多列循环合并导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```
 
-![](Easyexcel（6-单元格合并）/2.png)
+**效果展示：**
 
-### OnceAbsoluteMergeStrategy
+![多列循环合并效果](Easyexcel（6-单元格合并）/2.png)
 
-#### 源码查看
+### OnceAbsoluteMergeStrategy 绝对位置合并策略
+
+#### 源码分析
 
 ```java
 public class OnceAbsoluteMergeStrategy implements SheetWriteHandler {
@@ -275,20 +313,24 @@ public class OnceAbsoluteMergeStrategy implements SheetWriteHandler {
 }
 ```
 
-#### 基本使用
+#### 使用示例
 
-通过 registerWriteHandler 方法设置单元格合并策略，用于指定一个区域内的单元格进行合并
+通过 `registerWriteHandler` 方法设置单元格合并策略，用于指定一个区域内的单元格进行合并。
 
 ```java
+/**
+ * 绝对位置合并导出
+ */
 @GetMapping("/download2")
 public void download2(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user1 = new User();
         user1.setUserId(123);
         user1.setName("as");
@@ -309,6 +351,7 @@ public void download2(HttpServletResponse response) {
         user3.setPhone("46543213");
         user3.setEmail("5456");
         user3.setCreateTime(new Date());
+        
         // 从第1行第3列合并到第3行第3列
         OnceAbsoluteMergeStrategy onceAbsoluteMergeStrategy = new OnceAbsoluteMergeStrategy(0, 2, 2, 2);
         EasyExcel.write(response.getOutputStream(), User.class)
@@ -316,28 +359,32 @@ public void download2(HttpServletResponse response) {
                 .sheet("模板")
                 .doWrite(Arrays.asList(user1, user2, user3));
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("绝对位置合并导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```
 
-![](Easyexcel（6-单元格合并）/3.png)
+**效果展示：**
 
-## 合并单元格工具类
+![绝对位置合并效果](Easyexcel（6-单元格合并）/3.png)
 
-### AbstractMergeStrategy
+## 🛠️ 自定义合并策略
+
+### AbstractMergeStrategy 抽象合并策略
 
 #### 基本思路
 
-1. 继承 AbstractMergeStrategy 抽象合并策略，重写 merge 方法
-2. 传入要合并的数据列表，循环判断上下行是否是相同的数据，如果是则为同一个组，否则为另一个组，使用 List 保存每个组的数量
+1. 继承 `AbstractMergeStrategy` 抽象合并策略，重写 `merge` 方法
+2. 传入要合并的数据列表，循环判断上下行是否是相同的数据，如果是则为同一个组，否则为另一个组，使用 `List` 保存每个组的数量
 3. 单元格渲染时，循环遍历每个组的值后，计算要合并的单元格的上下标
 
-#### 使用
+#### 实现示例
 
 ```java
 /**
- * 自定义合并策略 该类继承了AbstractMergeStrategy抽象合并策略，需要重写merge()方法
+ * 自定义合并策略
+ * 该类继承了AbstractMergeStrategy抽象合并策略，需要重写merge()方法
  */
 public class CustomMergeStrategy extends AbstractMergeStrategy {
 
@@ -362,7 +409,9 @@ public class CustomMergeStrategy extends AbstractMergeStrategy {
         this.rowIndex = rowIndex;
     }
 
-    // 该方法将目标列根据值是否相同连续可合并，存储可合并的行数
+    /**
+     * 该方法将目标列根据值是否相同连续可合并，存储可合并的行数
+     */
     private List<Integer> getGroupCountList(List<String> exportDataList, Integer rowIndex) {
         if (CollectionUtils.isEmpty(exportDataList)) {
             return new ArrayList<>();
@@ -395,6 +444,9 @@ public class CustomMergeStrategy extends AbstractMergeStrategy {
         }
     }
 
+    /**
+     * 合并分组列
+     */
     private void mergeGroupColumn(Sheet sheet) {
         int rowCount = rowIndex + 1;
         for (Integer count : exportFieldGroupCountList) {
@@ -411,18 +463,24 @@ public class CustomMergeStrategy extends AbstractMergeStrategy {
 }
 ```
 
-1. 从首行开始合并单元格
+#### 使用示例
+
+**1. 从首行开始合并单元格**
 
 ```java
+/**
+ * 自定义策略1：从首行开始合并
+ */
 @GetMapping("/download3")
 public void download3(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user1 = new User();
         user1.setUserId(123);
         user1.setName("as");
@@ -452,25 +510,32 @@ public void download3(HttpServletResponse response) {
                 .sheet("模板")
                 .doWrite(userList);
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("自定义策略1导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```
 
-![](Easyexcel（6-单元格合并）/4.png)
+**效果展示：**
 
-2. 从指定行开始合并单元格
+![自定义策略1效果](Easyexcel（6-单元格合并）/4.png)
+
+**2. 从指定行开始合并单元格**
 
 ```java
+/**
+ * 自定义策略2：从指定行开始合并
+ */
 @GetMapping("/download3")
 public void download3(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user1 = new User();
         user1.setUserId(123);
         user1.setName("as");
@@ -500,27 +565,30 @@ public void download3(HttpServletResponse response) {
                 .sheet("模板")
                 .doWrite(userList);
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("自定义策略2导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```
 
-![](Easyexcel（6-单元格合并）/5.png)
+**效果展示：**
 
-### CellWriteHandler
+![自定义策略2效果](Easyexcel（6-单元格合并）/5.png)
+
+### CellWriteHandler 单元格写入处理器
 
 #### 基本思路
 
-1. 实现 CellWriteHandler 类的 afterCellDispose 方法，在每个单元格完全创建完之后执行合并单元格操作
+1. 实现 `CellWriteHandler` 类的 `afterCellDispose` 方法，在每个单元格完全创建完之后执行合并单元格操作
 2. 判断当前列是否为要合并的列，且当前行是否已经到达要操作的行数
 3. 如果是，则判断上一行和当前行的数据是否一致，且序号是否一致
 4. 如果是，则进行合并单元格操作，如果上一行已经被合并过了，则进行移除，然后再重新合并单元格
 
-#### 使用
+#### 实现示例
 
 ```java
 /**
- * excel合并单元格导出工具类
+ * Excel合并单元格导出工具类
  */
 public class EasyExcelUtil implements CellWriteHandler {
 
@@ -544,14 +612,6 @@ public class EasyExcelUtil implements CellWriteHandler {
 
     /**
      * 创建每个单元格之前执行
-     *
-     * @param writeSheetHolder
-     * @param writeTableHolder
-     * @param row
-     * @param head
-     * @param columnIndex
-     * @param relativeRowIndex
-     * @param isHead
      */
     @Override
     public void beforeCellCreate(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, Row row,
@@ -561,14 +621,6 @@ public class EasyExcelUtil implements CellWriteHandler {
 
     /**
      * 每个单元格数据内容渲染之后执行
-     *
-     * @param writeSheetHolder
-     * @param writeTableHolder
-     * @param cellData
-     * @param cell
-     * @param head
-     * @param relativeRowIndex
-     * @param isHead
      */
     @Override
     public void afterCellDataConverted(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, WriteCellData<?> cellData,
@@ -578,25 +630,17 @@ public class EasyExcelUtil implements CellWriteHandler {
 
     /**
      * 每个单元格完全创建完之后执行
-     *
-     * @param writeSheetHolder
-     * @param writeTableHolder
-     * @param cellDataList
-     * @param cell
-     * @param head
-     * @param relativeRowIndex
-     * @param isHead
      */
     @Override
     public void afterCellDispose(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, List<WriteCellData<?>> cellDataList,
                                  Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
-        //当前行
+        // 当前行
         int curRowIndex = cell.getRowIndex();
-        //当前列
+        // 当前列
         int curColIndex = cell.getColumnIndex();
-        //判断当前行是否已经到达要合并的行数
+        // 判断当前行是否已经到达要合并的行数
         if (curRowIndex > mergeRowIndex) {
-            //判断是否是合并列
+            // 判断是否是合并列
             for (int columnIndex : mergeColumnIndex) {
                 if (curColIndex == columnIndex) {
                     mergeWithPrevRow(writeSheetHolder, cell, curRowIndex, curColIndex);
@@ -609,10 +653,10 @@ public class EasyExcelUtil implements CellWriteHandler {
     /**
      * 当前单元格向上合并
      *
-     * @param writeSheetHolder
-     * @param cell             当前单元格
-     * @param curRowIndex      当前行
-     * @param curColIndex      当前列
+     * @param writeSheetHolder 写入Sheet的持有者
+     * @param cell 当前单元格
+     * @param curRowIndex 当前行
+     * @param curColIndex 当前列
      */
     private void mergeWithPrevRow(WriteSheetHolder writeSheetHolder, Cell cell, int curRowIndex, int curColIndex) {
         Cell cell1 = cell.getSheet().getRow(curRowIndex).getCell(0);
@@ -655,16 +699,22 @@ public class EasyExcelUtil implements CellWriteHandler {
 }
 ```
 
+#### 使用示例
+
 ```java
+/**
+ * CellWriteHandler合并策略导出
+ */
 @GetMapping("/download4")
 public void download4(HttpServletResponse response) {
     try {
+        // 设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
         String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
 
+        // 准备测试数据
         User user1 = new User();
         user1.setUserId(123);
         user1.setName("as");
@@ -688,19 +738,25 @@ public void download4(HttpServletResponse response) {
 
         List<User> userList = Arrays.asList(user1, user2, user3);
 
-//            EasyExcel.write(response.getOutputStream(), User.class)
-//                    .registerWriteHandler(new EasyExcelUtil(0, new int[]{0, 2}))
-//                    .sheet("模板")
-//                    .doWrite(userList);
+        // 方式1：合并多个列
+        // EasyExcel.write(response.getOutputStream(), User.class)
+        //         .registerWriteHandler(new EasyExcelUtil(0, new int[]{0, 2}))
+        //         .sheet("模板")
+        //         .doWrite(userList);
+        
+        // 方式2：分别合并不同列
         EasyExcel.write(response.getOutputStream(), User.class)
                 .registerWriteHandler(new EasyExcelUtil(0, new int[]{0}))
                 .registerWriteHandler(new EasyExcelUtil(0, new int[]{2}))
                 .sheet("模板")
                 .doWrite(userList);
     } catch (Exception e) {
-        e.printStackTrace();
+        log.error("CellWriteHandler合并策略导出失败", e);
+        throw new RuntimeException("导出失败: " + e.getMessage());
     }
 }
 ```
 
-![](Easyexcel（6-单元格合并）/6.png)
+**效果展示：**
+
+![CellWriteHandler合并效果](Easyexcel（6-单元格合并）/6.png)

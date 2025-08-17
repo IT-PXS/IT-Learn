@@ -1,5 +1,5 @@
 ---
-title: EasyExcel（1-注解使用详解）
+title: EasyExcel（1-注解使用）
 tag: EasyExcel
 category: Java
 description: EasyExcel 是阿里巴巴开源的一个轻量级 Excel 操作框架，专为 Java 开发者设计，支持读取和写入 Excel 文件。本文详细介绍 EasyExcel 中各种注解的使用方法，包括 @ExcelProperty、@ExcelIgnore、@ColumnWidth 等核心注解的配置和示例。

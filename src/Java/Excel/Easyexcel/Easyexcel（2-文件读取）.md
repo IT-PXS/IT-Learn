@@ -1,5 +1,5 @@
 ---
-title: EasyExcel（2-文件读取详解）
+title: EasyExcel（2-文件读取）
 tag: EasyExcel
 category: Java
 description: EasyExcel 是一款高效、轻量的Excel读写工具，适用于Java环境，广泛用于批量数据处理。本文详细介绍 EasyExcel 的文件读取功能，包括同步读取、异步读取、监听器使用、异常处理、分批处理和事务管理等核心功能。
