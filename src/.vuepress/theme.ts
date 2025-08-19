@@ -27,6 +27,8 @@ export default hopeTheme({
     end: ["Language", "Repo", "Outlook", "Search"],
   },
 
+  sidebarSorter: ["date"],
+
   blog: {
     medias: {
       // Baidu: "https://example.com",

@@ -7,71 +7,71 @@ export const zhNavbar = navbar([
   "/timeline/",
   {
     text: "Java",
+    link: "Java/SpringSecurity5/",
     // icon: "book",
-    prefix: "/Java/",
-    children: [
-      // "SpringBoot",
-      // "SpringCloud",
-      // "SpringSecurity",
-      {
-        text: "SpringBoot",
-        // icon: "leaf",
-        prefix: "SpringBoot/",
-        link: "SpringBoot/"
-      },
-      {
-        text: "SpringCloud",
-        // icon: "cloud",
-        prefix: "SpringCloud/",
-        link: "SpringCloud/"
-      },
-      {
-        text: "SpringSecurity",
-        // icon: "shield-alt",
-        prefix: "SpringSecurity/",
-        link: "SpringSecurity/"
-      },
-      {
-        text: "Excel",
-        prefix: "Excel/",
-        link: "Excel/"
-      },
-    ],
+    // prefix: "/Java/",
+    // children: [
+    //   // "SpringBoot",
+    //   // "SpringCloud",
+    //   // "SpringSecurity",
+    //   {
+    //     text: "SpringBoot",
+    //     // icon: "leaf",
+    //     prefix: "SpringBoot/",
+    //     link: "SpringBoot/"
+    //   },
+    //   {
+    //     text: "SpringCloud",
+    //     // icon: "cloud",
+    //     prefix: "SpringCloud/",
+    //     link: "SpringCloud/"
+    //   },
+    //   {
+    //     text: "SpringSecurity",
+    //     // icon: "shield-alt",
+    //     prefix: "SpringSecurity/",
+    //     link: "SpringSecurity/"
+    //   },
+    //   {
+    //     text: "Excel",
+    //     prefix: "Excel/",
+    //     link: "Excel/"
+    //   },
+    // ],
   },
   {
     text: "前端",
-    // icon: "code",
-    prefix: "/Front/",
-    children: [
-      {
-        text: "HTML",
-        // icon: "file-code",
-        prefix: "Html/",
-        link: "Html/"
-      },
-      {
-        text: "CSS",
-        // icon: "paint-brush",
-        prefix: "Css/",
-        link: "Css/"
-      },
-      {
-        text: "JavaScript",
-        // icon: "js",
-        prefix: "JavaScript/",
-        link: "JavaScript/"
-      },
-      {
-        text: "Vue",
-        // icon: "vuejs",
-        prefix: "Vue/",
-        link: "Vue/"
-      }
-    ],
+    link: "Front/",
+    // prefix: "/Front/",
+    // children: [
+    //   {
+    //     text: "HTML",
+    //     // icon: "file-code",
+    //     prefix: "Html/",
+    //     link: "Html/"
+    //   },
+    //   {
+    //     text: "CSS",
+    //     // icon: "paint-brush",
+    //     prefix: "Css/",
+    //     link: "Css/"
+    //   },
+    //   {
+    //     text: "JavaScript",
+    //     // icon: "js",
+    //     prefix: "JavaScript/",
+    //     link: "JavaScript/"
+    //   },
+    //   {
+    //     text: "Vue",
+    //     // icon: "vuejs",
+    //     prefix: "Vue/",
+    //     link: "Vue/"
+    //   }
+    // ],
   },
   {
     text: "数据库",
-    // icon: "database",
     prefix: "/Database/",
     children: [
       {
