@@ -11,7 +11,7 @@ export default hopeTheme({
     url: "https://it-pxs.github.io/IT-Learn/",
   },
 
-  logo: "https://theme-hope-assets.vuejs.press/logo.svg",
+  logo: "home.jpg",
 
   repo: "IT-PXS/IT-Learn",
   // 默认从 `repo` 内容中推断为以下之一：
@@ -42,6 +42,8 @@ export default hopeTheme({
       // Facebook: "https://example.com",
       // Flipboard: "https://example.com",
       // Gitee: "https://example.com",
+      QQ: "3032428600@qq.com",
+      Email: "mailto:3032428600@qq.com",
       GitHub: "https://github.com/IT-PXS/IT-Learn",
       // Gitlab: "https://example.com",
       // Gmail: "mailto:info@example.com",
@@ -62,10 +64,6 @@ export default hopeTheme({
       // Whatsapp: "https://example.com",
       // Youtube: "https://example.com",
       // Zhihu: "https://example.com",
-      // VuePressThemeHope: {
-      //   icon: "https://theme-hope-assets.vuejs.press/logo.svg",
-      //   link: "https://theme-hope.vuejs.press",
-      // },
     },
   },
 
@@ -291,6 +289,7 @@ export default hopeTheme({
 
     icon: {
       prefix: "fa6-solid:",
+      assets: "iconify"
     },
 
     // install @vuepress/plugin-pwa and uncomment these if you want a PWA
