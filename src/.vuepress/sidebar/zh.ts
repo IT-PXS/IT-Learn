@@ -63,4 +63,12 @@ export const zhSidebar = sidebar({
       collapsible: true,
     },
   ],
+  "/Front/": [
+    {
+      text: "HTML",
+      prefix: "HTML/",
+      children: "structure",
+      collapsible: true,
+    },
+  ],
 });
