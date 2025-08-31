@@ -33,22 +33,7 @@ export const zhNavbar = navbar([
   },
   {
     text: "数据库",
-    link: "/Database/",
-    // prefix: "/Database/",
+    link: "Database/",
     icon: "database",
-    // children: [
-    //   {
-    //     text: "MySQL",
-    //     icon: "table-columns",
-    //     prefix: "Mysql/",
-    //     link: "Mysql/"
-    //   },
-    //   {
-    //     text: "Redis",
-    //     icon: "fa6-brands:redis",
-    //     prefix: "Redis/",
-    //     link: "Redis/"
-    //   }
-    // ],
   },
 ]);

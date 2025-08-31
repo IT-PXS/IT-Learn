@@ -3,7 +3,7 @@ title: 异步多线程CompletableFuture
 tag: 工作技巧
 category: Java
 description: CompletableFuture 是 Java 8 引入的异步编程工具，提供非阻塞任务执行、回调处理、任务组合等功能。支持 thenApply()、thenCombine() 等方法，实现链式操作，可通过 exceptionally() 处理异常，allOf() 组合多个任务，并支持超时控制，提升并发性能。
-date: 2025-04-10 22:38:34
+date: 2025-01-10 22:38:34
 ---
 
 ## 任务开启

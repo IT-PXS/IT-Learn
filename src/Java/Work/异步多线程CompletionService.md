@@ -3,7 +3,7 @@ title: 异步多线程CompletionService
 tag: 工作技巧
 category: Java
 description: CompletionService 是 Java 并发工具，提供异步任务管理和结果收集能力。它按任务完成顺序返回结果，避免遍历 Future 阻塞等待，提升并发任务效率。适用于批量查询、爬虫、多数据源检索等场景，常用实现为 ExecutorCompletionService，基于线程池和阻塞队列优化任务执行和结果处理。
-date: 2025-03-26 22:38:34
+date: 2025-01-26 22:38:34
 ---
 
 ## 什么是 CompletionService？

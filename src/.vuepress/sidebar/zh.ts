@@ -70,5 +70,19 @@ export const zhSidebar = sidebar({
       children: "structure",
       collapsible: true,
     },
+    {
+      text: "CSS",
+      prefix: "CSS/",
+      children: "structure",
+      collapsible: true,
+    },
   ],
+  // "/Database/": [
+  //   {
+  //     text: "MySQL",
+  //     prefix: "MySQL/",
+  //     children: "structure",
+  //     collapsible: true,
+  //   },
+  // ],
 });
