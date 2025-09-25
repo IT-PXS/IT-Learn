@@ -11,15 +11,15 @@
     "docs:update-package": "npx vp-update"
   },
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.23",
-    "@vuepress/plugin-baidu-analytics": "^2.0.0-rc.112",
-    "@vuepress/plugin-search": "^2.0.0-rc.112",
+    "@vuepress/bundler-vite": "2.0.0-rc.24",
+    "@vuepress/plugin-baidu-analytics": "2.0.0-rc.112",
+    "@vuepress/plugin-search": "2.0.0-rc.112",
     "sass-embedded": "^1.89.2",
-    "vue": "^3.5.16",
-    "vuepress": "2.0.0-rc.23",
-    "vuepress-theme-hope": "2.0.0-rc.93"
+    "vue": "^3.5.20",
+    "vuepress": "2.0.0-rc.24",
+    "vuepress-theme-hope": "2.0.0-rc.94"
   },
   "dependencies": {
-    "@vuepress/plugin-watermark": "^2.0.0-rc.112"
+    "@vuepress/plugin-watermark": "2.0.0-rc.112"
   }
 }

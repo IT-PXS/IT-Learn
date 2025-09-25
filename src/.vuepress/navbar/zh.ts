@@ -36,4 +36,9 @@ export const zhNavbar = navbar([
     link: "Database/",
     icon: "database",
   },
+  {
+    text: "心得",
+    link: "More/",
+    icon: "lightbulb",
+  }
 ]);

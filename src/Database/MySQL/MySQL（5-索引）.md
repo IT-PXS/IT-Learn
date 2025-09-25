@@ -17,12 +17,76 @@ description: MySQL索引是加速数据检索的关键数据结构，常见类�
 ## 优缺点
 
 1. 优点：可以提高检索数据的速度。 
-
 2. 缺点：
 
 * 创建和维护索引需要耗费时间，耗费时间量随着数据量的增加而增加；
 * 索引需要占用物理空间，每一个索引要占一定的物理空间；
 * 增加、删除和修改数据时，要动态地维护索引，造成数据的维护速度降低了。 
+
+## 常用语法
+
+### 创建索引
+
+1. 创建表的时候创建索引
+
+```sql
+-- 唯一索引
+CREATE TABLE t1(
+  id INT NOT NULL,
+  name CHAR(30) NOT NULL,
+  UNIQUE INDEX UniqIdx(id)
+);
+-- 普通索引
+CREATE TABLE t1(
+  id INT NOT NULL,
+  name CHAR(30) NOT NULL,
+  INDEX UniqIdx(id)
+);
+-- 全文索引
+CREATE TABLE t1(
+  id INT NOT NULL,
+  name TEXT NOT NULL,
+  FULLTEXT INDEX UniqIdx(id)
+);
+-- 多列索引
+CREATE TABLE t1(
+  id INT NOT NULL,
+  name TEXT NOT NULL,
+  key INDEX UniqIdx(id,name)
+);
+```
+
+2. 在已存在的表上建立索引
+
+```sql
+-- 在已存在的表上建立索引
+ALTER TABLE mytable ADD UNIQUE INDEX UniqIdx(id);
+ALTER TABLE mytable ADD INDEX index_name(name(10),city,age);
+ALTER TABLE mytable ADD FULLTEXT INDEX UniqIdx(id);
+ALTER TABLE mytable ADD INDEX UniqIdx(id);
+-- 组合索引，相当于分别建立了下面三组索引：
+username,city,age
+username,city
+username
+
+
+-- 只能增加普通索引INDEX和UNIQUE INDEX索引这两种，不能创建PRIMARY KEY索引
+CREATE INDEX index_name ON mytable(username);
+CREATE UNIQUE INDEX index_name ON mytable(username);
+CREATE FULLTEXT INDEX index_name ON mytable(username);
+CREATE INDEX index_name ON mytable(username,password);
+```
+
+### 查看索引
+
+1. 查看表的索引：show index from 表名;
+2. 指定数据库查看表的索引：show index from 表名 from 数据库名;
+
+### 删除索引
+
+1. 删除表的索引：drop index 索引名 on 表名;
+2. 删除表的索引：alter table 表名 drop index 索引名;
+
 
 ## 普通索引
 
@@ -34,7 +98,7 @@ CREATE TABLE tablename(
     propname2 type2,
     ....
     propnamen typen,  
-    # 以上为属性声明
+    -- 以上为属性声明
     INDEX | KEY
     [indexname] (propnamen [(length)] [ ASC | DESC ] ) 
 );
@@ -117,7 +181,7 @@ create table class(
     unique index name_index (name)
 );
 
-## 当我们给某给字段定义了唯一约束时，MySQL为了保证唯一性，便会自动给这个字段添加唯一索引，而之后再手动给这个字段添加唯一索引便是一些多余操作
+-- 当我们给某给字段定义了唯一约束时，MySQL为了保证唯一性，便会自动给这个字段添加唯一索引，而之后再手动给这个字段添加唯一索引便是一些多余操作
 ```
 
 ```sql

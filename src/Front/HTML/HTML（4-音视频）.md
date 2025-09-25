@@ -11,7 +11,7 @@ date: 2025-04-18 12:42:19
 
 ### 基本音频标签
 
-HTML5的`<audio>`标签用于在网页中嵌入音频内容：
+HTML5 的 `<audio>` 标签用于在网页中嵌入音频内容：
 
 ```html
 <audio src="audio.mp3" controls></audio>
@@ -73,7 +73,7 @@ HTML5的`<audio>`标签用于在网页中嵌入音频内容：
 
 ### 基本视频标签
 
-HTML5的`<video>`标签用于在网页中嵌入视频内容：
+HTML5 的 `<video>` 标签用于在网页中嵌入视频内容：
 
 ```html
 <video src="video.mp4" controls width="640" height="360"></video>

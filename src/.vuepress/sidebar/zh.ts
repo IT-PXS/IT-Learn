@@ -77,12 +77,12 @@ export const zhSidebar = sidebar({
       collapsible: true,
     },
   ],
-  // "/Database/": [
-  //   {
-  //     text: "MySQL",
-  //     prefix: "MySQL/",
-  //     children: "structure",
-  //     collapsible: true,
-  //   },
-  // ],
+  "/Database/": [
+    {
+      text: "MySQL",
+      prefix: "MySQL/",
+      children: "structure",
+      collapsible: true,
+    },
+  ],
 });
