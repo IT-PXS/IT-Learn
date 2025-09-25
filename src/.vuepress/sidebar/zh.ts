@@ -24,13 +24,12 @@ export const zhSidebar = sidebar({
   //   },
   // ],
   "/Java/": [
-    // {
-    //   text: "SpringBoot",
-    //   // icon: "book",
-    //   prefix: "SpringBoot/",
-    //   children: "structure",
-    //   collapsible: true,
-    // },
+    {
+      text: "SpringBoot",
+      prefix: "SpringBoot/",
+      children: "structure",
+      collapsible: true,
+    },
     // {
     //   text: "SpringCloud",
     //   // icon: "book",

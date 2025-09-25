@@ -1,8 +1,10 @@
 ---
 title: SpringBoot Task定时任务
-tag: 定时任务
+tag: 
+  - 定时任务
+  - SpringBoot
 category: Java
-description: Spring Boot任务功能帮助开发者轻松管理定时和异步任务，简化后台任务的创建和调度。通过注解如@Scheduled和@Async，开发者可实现定时任务、周期性任务或并行执行任务，从而提高系统性能和任务自动化，广泛应用于各种业务场景。
+description: Spring Boot任务功能帮助开发者轻松管理定时和异步任务，简化后台任务的创建和调度。通过注解如 `@Scheduled` 和 `@Async`，开发者可实现定时任务、周期性任务或并行执行任务，从而提高系统性能和任务自动化，广泛应用于各种业务场景。
 date: 2024-11-08 22:38:34
 ---
 
@@ -41,7 +43,7 @@ public @interface Scheduled {
 
 ### fixedDelayString
 
-与 fixedDelay 一样，不同的是使用的是 String 字符串，支持占位符方式
+与 `fixedDelay` 一样，不同的是使用的是 `String` 字符串，支持占位符方式
 
 ```java
 @Scheduled(fixedDelayString = "${time.fixedDelay}")
@@ -58,15 +60,15 @@ public void test() {
 
 ### fixedRateString
 
-与 fixedRate 一样，不同的是使用的是 String 字符串，支持占位符方式
+与 `fixedRate` 一样，不同的是使用的是 `String` 字符串，支持占位符方式
 
 ### initialDelay
 
-这个参数只能配合 fixedDelay 或 fixedRate 使用。如：@Scheduled(initialDelay = 10000, fixedRate = 15000)，意思是在容器启动后，延迟 10 秒再执行一次定时器，以后每 15 秒再执行一次该定时器
+这个参数只能配合 `fixedDelay` 或 `fixedRate` 使用。如：`@Scheduled(initialDelay = 10000, fixedRate = 15000)`，意思是在容器启动后，延迟 10 秒再执行一次定时器，以后每 15 秒再执行一次该定时器
 
 ### initialDelayString
 
-与 initialDelay 一样，不同的是使用的是 String 字符串，支持占位符方式
+与 `initialDelay` 一样，不同的是使用的是 `String` 字符串，支持占位符方式
 
 ### cron 表达式
 语法格式：
@@ -222,9 +224,9 @@ public class TestJob {
 
 ## 定时任务配置
 
-@EnableScheduling 注解引入了 ScheduledAnnotationBeanPostProcessor 其 setScheduler(Object scheduler) 有以下的注释：
+`@EnableScheduling` 注解引入了 `ScheduledAnnotationBeanPostProcessor` 其 `setScheduler(Object scheduler)` 有以下的注释：
 
-如果 TaskScheduler 或者 ScheduledExecutorService 没有定义为该方法的参数，该方法将在 Spring IoC 中寻找唯一的 TaskScheduler 或者名称为 taskScheduler 的 Bean 作为参数，当然你按照查找 TaskScheduler 的方法找一个 ScheduledExecutorService 也可以。要是都找不到那么只能使用本地单线程调度器了
+如果 `TaskScheduler` 或者 `ScheduledExecutorService` 没有定义为该方法的参数，该方法将在 Spring IoC 中寻找唯一的 `TaskScheduler` 或者名称为 `taskScheduler` 的 Bean 作为参数，当然你按照查找 `TaskScheduler` 的方法找一个 `ScheduledExecutorService` 也可以。要是都找不到那么只能使用本地单线程调度器了
 
 ![](SpringBoot-Task定时任务/5.png)
 
@@ -232,12 +234,12 @@ public class TestJob {
 
 ### 执行器
 
-SpringBoot 内默认自动配置 TaskExecutor 任务执行器线程池，主要用于执行单次任务
+Spring Boot 内默认自动配置 `TaskExecutor` 任务执行器线程池，主要用于执行单次任务
 
 #### 自动配置条件
 
-1. 当类路径下存在 ThreadPoolTaskExecutor 类
-2. 当 Spring 容器中不存在 Executor 的 bean
+1. 当类路径下存在 `ThreadPoolTaskExecutor` 类
+2. 当 Spring 容器中不存在 `Executor` 的 bean
 
 ```java
 // 仅在类 ThreadPoolTaskExecutor 存在于 classpath 时才应用
@@ -281,7 +283,7 @@ public class TaskExecutionAutoConfiguration {
 
 #### 线程池配置
 
-TaskExecutionProperties 默认值：
+`TaskExecutionProperties` 默认值：
 
 1. 线程名称前缀：threadNamePrefix = “task-”
 2. 核心线程数：coreSize = 8
@@ -290,12 +292,12 @@ TaskExecutionProperties 默认值：
 
 ### 调度器
 
-SpringBoot 内默认自动配置 TaskScheduler 任务调度器线程池，主要用于执行周期性任务
+Spring Boot 内默认自动配置 `TaskScheduler` 任务调度器线程池，主要用于执行周期性任务
 
 #### 自动配置条件
 
-1. 当类路径下存在 ThreadPoolTaskScheduler 类
-2. 当 Spring 容器中不存在 SchedulingConfigurer 、 TaskScheduler 、ScheduledExecutorService 的 bean
+1. 当类路径下存在 `ThreadPoolTaskScheduler` 类
+2. 当 Spring 容器中不存在 `SchedulingConfigurer`、`TaskScheduler`、`ScheduledExecutorService` 的 bean
 
 ```java
 @ConditionalOnClass(ThreadPoolTaskScheduler.class)
@@ -327,7 +329,7 @@ public class TaskSchedulingAutoConfiguration {
 }
 ```
 
-3. 当 Spring 容器中存在名字叫 org.springframework.context.annotation.internalScheduledAnnotationProcessor （需要配置 @EnableScheduling 注解将会注入这个名字的 bean）
+3. 当 Spring 容器中存在名字叫 `org.springframework.context.annotation.internalScheduledAnnotationProcessor`（需要配置 `@EnableScheduling` 注解将会注入这个名字的 bean）
 
 ```java
 @Target(ElementType.TYPE)
@@ -353,14 +355,14 @@ public class SchedulingConfiguration {
 
 #### 线程池配置
 
-TaskSchedulingProperties 默认配置值：
+`TaskSchedulingProperties` 默认配置值：
 
 1. 线程名称前缀：threadNamePrefix = “scheduling-”
 2. 线程数：size = 1
 
-该配置的自定义配置以 spring.task.scheduling 开头。同时它需要在任务执行器配置 TaskExecutionAutoConfiguration 配置后才生效。我们只需要在中对其配置属性 spring.task.execution 相关属性配置即可。
+该配置的自定义配置以 `spring.task.scheduling` 开头。同时它需要在任务执行器配置 `TaskExecutionAutoConfiguration` 配置后才生效。我们只需要在中对其配置属性 `spring.task.execution` 相关属性配置即可。
 
-注意：定义任务默认用的是 TaskSchedulingAutoConfiguration 实例化的 Bean（applicationTaskExecutor、taskScheduler）
+注意：定义任务默认用的是 `TaskSchedulingAutoConfiguration` 实例化的 Bean（`applicationTaskExecutor`、`taskScheduler`）
 
 ### Properties 配置
 
@@ -397,11 +399,11 @@ spring.task.execution.thread-name-prefix=task-
 
 #### TaskSchedulingAutoConfiguration 源码
 
-当 Spring Boot 应用程序中没有定义自定义的线程池 bean 时，Spring Boot 应用程序会根据自动配置类注入一个名为 applicationTaskExecutor 或 taskExecutor 的线程池对象，它的配置是在 TaskExecutionProperties 类中完成的，这个类使用 spring.task.execution 前缀进行配置，包含了很多线程池相关细节的配置选项，当我们容器中存在自定义线程池时，applicationTaskExecutor 或 taskExecutor 的线程池对象是不会被创建的。
+当 Spring Boot 应用程序中没有定义自定义的线程池 bean 时，Spring Boot 应用程序会根据自动配置类注入一个名为 `applicationTaskExecutor` 或 `taskExecutor` 的线程池对象，它的配置是在 `TaskExecutionProperties` 类中完成的，这个类使用 `spring.task.execution` 前缀进行配置，包含了很多线程池相关细节的配置选项，当我们容器中存在自定义线程池时，`applicationTaskExecutor` 或 `taskExecutor` 的线程池对象是不会被创建的。
 
 #### @Async 注解相关配置
 
-使用@Async 注解没有指定 value 属性时，项目启动的时候会有这样的提示：“在上下文中找到多个 TaskExecutor bean，并且没有一个名为' taskExecutor'。将其中一个标记为 primary 或将其命名为'taskExecutor'（可能作为别名），以便将其用于异步处理”
+使用 `@Async` 注解没有指定 `value` 属性时，项目启动的时候会有这样的提示：“在上下文中找到多个 `TaskExecutor` bean，并且没有一个名为 `taskExecutor`。将其中一个标记为 `primary` 或将其命名为 `taskExecutor`（可能作为别名），以便将其用于异步处理”
 
 ```java
 // 标记为 Primary，即主要的线程
@@ -438,7 +440,7 @@ public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
 
 ### 出现原因
 
-Spring 中@EnableScheduling 和@Scheduled 标注的定时任务默认单线程同步执行，多个任务时，一个任务执行完毕以后才能执行下一个任务，可能会有阻塞现象发生（如果希望并发运行，需要配置线程池）
+Spring 中 `@EnableScheduling` 和 `@Scheduled` 标注的定时任务默认单线程同步执行，多个任务时，一个任务执行完毕以后才能执行下一个任务，可能会有阻塞现象发生（如果希望并发运行，需要配置线程池）
 
 ```java
 @SpringBootApplication
@@ -608,9 +610,9 @@ task2 ending ,我的线程的 id == > 126 , 时间 == > Fri Feb 01 16:19:38 CST 
 
 #### 实现 SchedulingConfigurer 接口
 
-使用@Async 会导致第一次任务执行时间过长，从而第二次任务和第一次任务并发执行
+使用 `@Async` 会导致第一次任务执行时间过长，从而第二次任务和第一次任务并发执行
 
-解决方法：实现 SchedulingConfigurer 接口，这样自动装配中 TaskSchedulingAutoConfiguration 的 taskScheduler 就不会被实例化，替换原来的线程池配置
+解决方法：实现 `SchedulingConfigurer` 接口，这样自动装配中 `TaskSchedulingAutoConfiguration` 的 `taskScheduler` 就不会被实例化，替换原来的线程池配置
 
 ```java
 @Configuration
@@ -738,15 +740,15 @@ spring.task.execution.thread-name-prefix=task-
 
 ### 出现问题
 
-用实现 SpringBoot + @Scheduled 实现了定时任务。但是也存在很多问题：
+用实现 Spring Boot + `@Scheduled` 实现了定时任务。但是也存在很多问题：
 
-通常，@Scheduled 注解的所有属性只在 Spring Context 启动时解析和初始化一次。因此，当在 Spring 中使用 @Scheduled 注解时，无法在运行时更改 fixedDelay 或 fixedRate 值。
+通常，`@Scheduled` 注解的所有属性只在 Spring Context 启动时解析和初始化一次。因此，当在 Spring 中使用 `@Scheduled` 注解时，无法在运行时更改 `fixedDelay` 或 `fixedRate` 值。
 
 1. 在一个线程内执行，那么任务多了就可能被阻塞，导致任务延迟执行。
 2. 每次修改执行频率都要改代码，重启服务。
 3. 无法提供定时任务的启用、暂停、修改接口。
 
-实现方法：参考 ScheduledTaskRegistrar 源码提供的方法
+实现方法：参考 `ScheduledTaskRegistrar` 源码提供的方法
 
 ### 简单案例
 
