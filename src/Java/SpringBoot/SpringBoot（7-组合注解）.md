@@ -1,5 +1,5 @@
 ---
-title: SpringBoot组合注解
+title: SpringBoot（7-组合注解）
 tag:
   - SpringBoot
 category: Java

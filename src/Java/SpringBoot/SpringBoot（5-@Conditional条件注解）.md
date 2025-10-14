@@ -1,5 +1,5 @@
 ---
-title: SpringBoot @Conditional条件注解
+title: SpringBoot（5-@Conditional条件注解）
 tag:
   - SpringBoot
 category: Java
@@ -67,7 +67,7 @@ public class HelloServiceImpl implements HelloService {
 | OnExpressionCondition           | @ConditionalOnExpression      | @ConditionalOnExpression("''${server.host}'=='localhost'") | 判断 SpEL 表达式成立生效                                      |
 | @ConditionalOnJava              | OnJavaCondition               | @ConditionalOnJava(JavaVersion.EIGHT)                        | 指定 Java 版本符合要求生效                                     |
 | @ConditionalOnProperty          | OnPropertyCondition           | @ConditionalOnProperty(prefix = "spring.aop", name = "auto", havingValue = "true", matchIfMissing = true) | 应用环境中的属性满足条件生效                                 |
-| @ConditionalOnResource          | OnResourceCondition           | @ConditionalOnResource(resources ="mybatis.xml")             | 存在指定的资源文件生效                                       |
+| @ConditionalOnResource          | OnResourceCondition           | @ConditionalOnResource(resources = "mybatis.xml")             | 存在指定的资源文件生效                                       |
 | @ConditionalOnWebApplication    | OnWebApplicationCondition     |                                                              | 当前应用是 Web 应用生效                                        |
 | @ConditionalOnNotWebApplication | OnWebApplicationCondition     |                                                              | 当前应用不是 Web 应用生效                                      |
 

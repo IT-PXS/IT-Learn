@@ -1,5 +1,5 @@
 ---
-title: SpringBoot Task定时任务
+title: SpringBoot（1-Task定时任务）
 tag: 
   - 定时任务
   - SpringBoot
@@ -39,7 +39,7 @@ public @interface Scheduled {
 ### fixedDelay
 它的间隔时间是根据上次任务结束的时候开始计时的，只要盯紧上一次任务执行结束的时间即可，跟任务逻辑的执行时间无关，两个任务的间隔时间是固定的
 
-![](SpringBoot-Task定时任务/1.png)
+![](SpringBoot（1-Task定时任务）/1.png)
 
 ### fixedDelayString
 
@@ -56,7 +56,7 @@ public void test() {
 
 在理想情况下，下一次开始和上一次开始之间的时间间隔是一定的，但是默认情况下 SpringBoot 定时任务是单线程执行的。当下一轮的任务满足时间策略后任务就会加入队列，即当本次任务开始执行时下一次任务的时间就已经确定了，由于本次任务的“超时”执行，下一次任务的等待时间就会被压缩甚至阻塞
 
-![](SpringBoot-Task定时任务/2.png)
+![](SpringBoot（1-Task定时任务）/2.png)
 
 ### fixedRateString
 
@@ -89,37 +89,37 @@ public void test() {
 
 1. \*：表示匹配该域的任意值。
 
-   例如：在 Minutes 域使用*，即表示每分钟都会触发事件
+例如：在 Minutes 域使用*，即表示每分钟都会触发事件
 
 2. ?：只能用在 DayofMonth 和 DayofWeek 两个域，它也匹配域的任意值，但实际不会，因为 DayofMonth 和 DayofWeek 会相互影响。
 
-   例如：在每月的 20 日触发任务，不管 20 日是星期几，只能使用如下写法：13 13 15 20 * ?，其中最后一位只能用?，而不能使用*，如果使用*表示不管星期几都会触发
+例如：在每月的 20 日触发任务，不管 20 日是星期几，只能使用如下写法：13 13 15 20 * ?，其中最后一位只能用?，而不能使用*，如果使用*表示不管星期几都会触发
 
 3. -：表示范围。
 
-   例如：在 Minutes 域使用 5-20，表示从 5 到 20 分钟每分钟触发一次
+例如：在 Minutes 域使用 5-20，表示从 5 到 20 分钟每分钟触发一次
 
 4. /：表示起始时间开始触发，然后每隔固定时间触发一次。
 
-   例如：在 Minutes 域使用 5/20，则意味着从第 5 分钟开始，每隔 20 分钟触发一次
+例如：在 Minutes 域使用 5/20，则意味着从第 5 分钟开始，每隔 20 分钟触发一次
 
 5. ,：表示列出枚举值。
 
-   例如：在 Minutes 域使用 5,20，则意味着在 5 和 20 分都会触发一次
+例如：在 Minutes 域使用 5,20，则意味着在 5 和 20 分都会触发一次
 
 6. L：表示最后，只能出现在 DayofWeek 和 DayofMonth 域。
 
-   例如：在 DayofWeek 域使用 5L，意味着在最后的一个星期四触发
+例如：在 DayofWeek 域使用 5L，意味着在最后的一个星期四触发
 
 7. W：表示有效工作日（周一到周五），只能出现在 DayofMonth 域，系统将在离指定日期的最近的有效工作日触发事件。
 
-   例如：在 DayofMonth 使用 5W，如果 5 日是星期六，则将在最近的工作日（星期五，即 4 日触发）；如果 5 日是星期天，则在 6 日（星期一）触发；如果 5 日在星期一到星期五中的一天，则就在 5 日触发。注意：W 的最近寻找不会跨过月份
+例如：在 DayofMonth 使用 5W，如果 5 日是星期六，则将在最近的工作日（星期五，即 4 日触发）；如果 5 日是星期天，则在 6 日（星期一）触发；如果 5 日在星期一到星期五中的一天，则就在 5 日触发。注意：W 的最近寻找不会跨过月份
 
 8. LW：这两个字符可以连用，表示在某个月最后一个工作日，即最后一个星期五
 
 9. #：用于确定每个月第 n 个星期 x（x#n），只能出现在 DayofMonth 域。
 
-   例如：4#2 表示第 2 个星期三
+例如：4#2 表示第 2 个星期三
 
 **常用表达式参考**
 
@@ -228,9 +228,9 @@ public class TestJob {
 
 如果 `TaskScheduler` 或者 `ScheduledExecutorService` 没有定义为该方法的参数，该方法将在 Spring IoC 中寻找唯一的 `TaskScheduler` 或者名称为 `taskScheduler` 的 Bean 作为参数，当然你按照查找 `TaskScheduler` 的方法找一个 `ScheduledExecutorService` 也可以。要是都找不到那么只能使用本地单线程调度器了
 
-![](SpringBoot-Task定时任务/5.png)
+![](SpringBoot（1-Task定时任务）/5.png)
 
-![](SpringBoot-Task定时任务/3.png)
+![](SpringBoot（1-Task定时任务）/3.png)
 
 ### 执行器
 
@@ -285,10 +285,10 @@ public class TaskExecutionAutoConfiguration {
 
 `TaskExecutionProperties` 默认值：
 
-1. 线程名称前缀：threadNamePrefix = “task-”
-2. 核心线程数：coreSize = 8
-3. 最大线程数：maxSize = Integer.MAX_VALUE
-4. 非核心线程存活时长：keepAlive = Duration.ofSeconds(60)
+1. 线程名称前缀：`threadNamePrefix = "task-"`
+2. 核心线程数：`coreSize = 8`
+3. 最大线程数：`maxSize = Integer.MAX_VALUE`
+4. 非核心线程存活时长：`keepAlive = Duration.ofSeconds(60)`
 
 ### 调度器
 
@@ -357,8 +357,8 @@ public class SchedulingConfiguration {
 
 `TaskSchedulingProperties` 默认配置值：
 
-1. 线程名称前缀：threadNamePrefix = “scheduling-”
-2. 线程数：size = 1
+1. 线程名称前缀：`threadNamePrefix = "scheduling-"`
+2. 线程数：`size = 1`
 
 该配置的自定义配置以 `spring.task.scheduling` 开头。同时它需要在任务执行器配置 `TaskExecutionAutoConfiguration` 配置后才生效。我们只需要在中对其配置属性 `spring.task.execution` 相关属性配置即可。
 
@@ -752,7 +752,7 @@ spring.task.execution.thread-name-prefix=task-
 
 ### 简单案例
 
-```mysql
+```sql
 CREATE TABLE `sys_task` (
   `id` bigint(21) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `task_uuid` varchar(50) DEFAULT NULL COMMENT '任务UUID',

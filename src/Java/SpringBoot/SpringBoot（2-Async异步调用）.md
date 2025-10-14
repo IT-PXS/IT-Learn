@@ -1,5 +1,5 @@
 ---
-title: SpringBoot Async异步调用
+title: SpringBoot（2-Async异步调用）
 tag:
   - SpringBoot
 category: Java
@@ -247,29 +247,29 @@ start 任务1...
 
 ### 默认线程池
 
-SpringBoot 从 2.1 开始使用的是 ThreadPoolTaskExecutor 线程池，之前使用的是 SimpleAsyncTaskExecutor，查看 AsyncExecutionInterceptor 源码中的 getDefaultExecutor 方法，会先去找名称为 taskExecutor 的 Bean，如果找不到才使用 SimpleAsyncTaskExecutor
+SpringBoot 从 2.1 开始使用的是 `ThreadPoolTaskExecutor` 线程池，之前使用的是 `SimpleAsyncTaskExecutor`，查看 `AsyncExecutionInterceptor` 源码中的 `getDefaultExecutor` 方法，会先去找名称为 `taskExecutor` 的 Bean，如果找不到才使用 `SimpleAsyncTaskExecutor`
 
-注意：名称为 taskExecutor 的 Bean 在 TaskExecutionAutoConfiguration 会被实例化
+注意：名称为 `taskExecutor` 的 Bean 在 `TaskExecutionAutoConfiguration` 会被实例化
 
-![](SpringBoot-Async异步调用/1.png)
+![](SpringBoot（2-Async异步调用）/1.png)
 
-![](SpringBoot-Async异步调用/2.png)
+![](SpringBoot（2-Async异步调用）/2.png)
 
-![](SpringBoot-Async异步调用/3.png)
+![](SpringBoot（2-Async异步调用）/3.png)
 
 1. ThreadPoolTaskExecutor
 
-此线程池的默认参数（由 SpringBoot 配置 TaskExecutionProperties），核心线程数 8，队列容量不限，最大线程数不限。如果业务逻辑需要执行的时间比较长，或者由于代码缺陷导致核心线程不能被释放，那么队列中的任务会越来越多且不会被执行。因此使用@Async 必须配置自定义线程池，或者修改默认线程池参数
+此线程池的默认参数（由 SpringBoot 配置 `TaskExecutionProperties`），核心线程数 8，队列容量不限，最大线程数不限。如果业务逻辑需要执行的时间比较长，或者由于代码缺陷导致核心线程不能被释放，那么队列中的任务会越来越多且不会被执行。因此使用@Async 必须配置自定义线程池，或者修改默认线程池参数
 
 2. SimpleAsyncTaskExecutor
 
-此线程池会一直创建新的线程，失去了线程池的优势，不推荐使用，若系统中不断地创建线程，最终会导致系统占用内存过高，引发 OutOfMemoryError 错误。
+此线程池会一直创建新的线程，失去了线程池的优势，不推荐使用，若系统中不断地创建线程，最终会导致系统占用内存过高，引发 `OutOfMemoryError` 错误。
 
-针对线程创建问题，SimpleAsyncTaskExecutor 提供了限流机制，查看 ConcurrencyThrottleSupport 源码中的 beforeAccess 方法，通过 concurrencyLimit 属性来控制开关，当 concurrencyLimit >= 0 时开启限流机制，默认关闭限流机制即 concurrencyLimit =-1，当关闭情况下，会不断创建新的线程来处理任务。基于默认配置，SimpleAsyncTaskExecutor 并不是严格意义的线程池，达不到线程复用的功能
+针对线程创建问题，`SimpleAsyncTaskExecutor` 提供了限流机制，查看 `ConcurrencyThrottleSupport` 源码中的 beforeAccess 方法，通过 `concurrencyLimit` 属性来控制开关，当 `concurrencyLimit >= 0` 时开启限流机制，默认关闭限流机制即 `concurrencyLimit =-1`，当关闭情况下，会不断创建新的线程来处理任务。基于默认配置，`SimpleAsyncTaskExecutor` 并不是严格意义的线程池，达不到线程复用的功能
 
-![](SpringBoot-Async异步调用/4.png)
+![](SpringBoot（2-Async异步调用）/4.png)
 
-![](SpringBoot-Async异步调用/5.png)
+![](SpringBoot（2-Async异步调用）/5.png)
 
 ### 线程池修改
 
@@ -288,14 +288,14 @@ spring.task.execution.pool.queue-capacity=1000
 spring.task.execution.thread-name-prefix=test-thread-
 ```
 
-@Async 异步方法默认使用 Spring 创建 ThreadPoolTaskExecutor（参考 TaskExecutionAutoConfiguration）
+@Async 异步方法默认使用 Spring 创建 `ThreadPoolTaskExecutor`（参考 `TaskExecutionAutoConfiguration`）
 
-1. 默认核心线程数：8
-2. 最大线程数：Integet.MAX_VALUE
-3. 队列使用：LinkedBlockingQueue
-4. 容量是：Integet.MAX_VALUE
-5. 空闲线程保留时间：60s
-6. 线程池拒绝策略：AbortPolicy
+1. 默认核心线程数：`8`
+2. 最大线程数：`Integet.MAX_VALUE`
+3. 队列使用：`LinkedBlockingQueue`
+4. 容量是：`Integet.MAX_VALUE`
+5. 空闲线程保留时间：`60s`
+6. 线程池拒绝策略：`AbortPolicy`
 
 #### 自定义线程池
 
@@ -399,17 +399,17 @@ class Async02ApplicationTests {
 
 #### 实现接口 AsyncConfigurer
 
-AsyncConfigurer 接口是 Spring 框架用于全局配置异步执行器（即线程池）的核心接口。当我们的 Spring 应用需要统一管理所有异步任务的执行环境时，可以选择实现此接口
+`AsyncConfigurer` 接口是 Spring 框架用于全局配置异步执行器（即线程池）的核心接口。当我们的 Spring 应用需要统一管理所有异步任务的执行环境时，可以选择实现此接口
 
-使用@EnableAsync 后会导入 AsyncConfigurationSelector 类，根据代理类型返回对应的类（默认为 PROXY，即 ProxyAsyncConfiguration 类），ProxyAsyncConfiguration 会实例化 AsyncAnnotationBeanPostProcessor，并注入对应的实现 AsyncConfigurer 接口的类
+使用 `@EnableAsync` 后会导入 `AsyncConfigurationSelector` 类，根据代理类型返回对应的类（默认为 `PROXY`，即 `ProxyAsyncConfiguration` 类），`ProxyAsyncConfiguration` 会实例化 `AsyncAnnotationBeanPostProcessor`，并注入对应的实现 `AsyncConfigurer` 接口的类
 
-![](SpringBoot-Async异步调用/6.png)
+![](SpringBoot（2-Async异步调用）/6.png)
 
-![](SpringBoot-Async异步调用/7.png)
+![](SpringBoot（2-Async异步调用）/7.png)
 
-![](SpringBoot-Async异步调用/8.png)
+![](SpringBoot（2-Async异步调用）/8.png)
 
-![](SpringBoot-Async异步调用/9.png)
+![](SpringBoot（2-Async异步调用）/9.png)
 
 ```java
 public interface AsyncConfigurer {
@@ -426,8 +426,8 @@ public interface AsyncConfigurer {
 ```
 
 1. getAsyncExecutor()：用于实现自定义线程池，控制并发数
-+ 在 getAsyncExecutor()中创建线程池的时候，必须使用 executor.initialize()，不然在调用时会报线程池未初始化的异常
-+ 如果使用 threadPoolTaskExecutor()来定义 bean，则不需要初始化
++ 在 `getAsyncExecutor()` 中创建线程池的时候，必须使用 `executor.initialize()`，不然在调用时会报线程池未初始化的异常
++ 如果使用 `threadPoolTaskExecutor()` 来定义 bean，则不需要初始化
 2. getAsyncUncaughtExceptionHandler()：用于处理异步方法的异常
 
 ```java
@@ -551,9 +551,9 @@ public class UserService {
 
 因为使用 final 关键字修饰的方法，是没法被子类重写的。因此这种情况下，@Async 注解的异步功能会失效。
 
-3. 异步类没有使用@Component 注解导致 Spring 无法扫描到异步类
+3. 异步类没有使用 `@Component` 注解导致 Spring 无法扫描到异步类
 
-4. 需要在启动类上添加@EnableAsync 注解
+4. 需要在启动类上添加 `@EnableAsync` 注解
 
 ```java
 @EnableAsync
@@ -614,16 +614,16 @@ public class UserService {
 }
 ```
 
-在 AsyncExecutionInterceptor 类的 invoke()方法，会调用它的父类 AsyncExecutionAspectSupport 中的 doSubmit 方法，该方法时异步功能的核心代码，如下：
+在 `AsyncExecutionInterceptor` 类的 invoke()方法，会调用它的父类 `AsyncExecutionAspectSupport` 中的 doSubmit 方法，该方法时异步功能的核心代码，如下：
 
-![](SpringBoot-Async异步调用/10.png)
+![](SpringBoot（2-Async异步调用）/10.png)
 
 从上面看出，@Async 注解的异步方法的返回值，要么是 Future，要么是 null。
 因此，在实际项目中，如果想要使用 `@Async` 注解的异步功能，相关方法的返回值必须是 void 或者 Future
 
 ### 事务使用
 
-在 Async 方法上标注@Transactional 是没用的，在 Async 方法中调用的方法上添加@Transactional 有效
+在 Async 方法上标注 `@Transactional` 是没用的，在 Async 方法中调用的方法上添加 `@Transactional` 有效
 
 ```java
 /**

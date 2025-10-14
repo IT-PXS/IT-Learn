@@ -1,5 +1,5 @@
 ---
-title: SpringBoot Validator属性校验
+title: SpringBoot（3-Validator属性校验）
 tag:
   - SpringBoot
 category: Java
@@ -11,7 +11,7 @@ date: 2025-03-19 12:42:19
 
 Java API 规范（JSR 303）定义了 Bean 校验的标准 `validation-api`，但没有提供实现。`Hibernate Validator` 是对这个规范的实现，并增加了校验注解如 `@Email`、`@Length` 等。Spring Validation 是对 `Hibernate Validator` 的二次封装，用于支持 Spring MVC 参数自动校验
 
-如果 spring-boot 版本小于 2.3.x，spring-boot-starter-web 会自动传入 hibernate-validator 依赖。如果 spring-boot 版本大于 2.3.x，则需要手动引入依赖：
+如果 spring-boot 版本小于 2.3.x，`spring-boot-starter-web` 会自动传入 `hibernate-validator` 依赖。如果 spring-boot 版本大于 2.3.x，则需要手动引入依赖：
 
 ```xml
 <dependency>
@@ -207,14 +207,14 @@ private String xxxx;
 ```java
 /**
  * 自定义校验注解
- *     1、message、contains、payload是必须要写的
+ *     1、message、contains、payload 是必须要写的
  *     2、还需要什么方法可根据自己的实际业务需求，自行添加定义即可
- * 注:当没有指定默认值时，那么在使用此注解时，就必须输入对应的属性值
+ * 注: 当没有指定默认值时，那么在使用此注解时，就必须输入对应的属性值
  */
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Documented
-// 指定此注解的实现，即:验证器
+// 指定此注解的实现，即: 验证器
 @Constraint(validatedBy ={JustryDengValidator.class})
 public @interface ConstraintsJustryDeng {
  
@@ -234,21 +234,21 @@ public @interface ConstraintsJustryDeng {
 
 ```java
 /**
- * ConstraintsJustryDeng注解 校验器 实现
- * 注:验证器需要实现ConstraintValidator<U, V>, 其中 U为对应的注解类， V为被该注解标记的字段的类型(或其父类型)
+ * ConstraintsJustryDeng 注解 校验器 实现
+ * 注: 验证器需要实现 ConstraintValidator <U, V>, 其中 U 为对应的注解类， V 为被该注解标记的字段的类型(或其父类型)
  *
- * 注: 当项目启动后，会(懒加载)创建ConstraintValidator实例，在创建实例后会初始化调
+ * 注: 当项目启动后，会(懒加载)创建 ConstraintValidator 实例，在创建实例后会初始化调
  *     用{@link ConstraintValidator#initialize}方法。
- *     所以，只有在第一次请求时，会走initialize方法， 后面的请求是不会走initialize方法的。
+ *     所以，只有在第一次请求时，会走 initialize 方法， 后面的请求是不会走 initialize 方法的。
  *
- * 注: (懒加载)创建ConstraintValidator实例时， 会走缓存; 如果缓存中有，则直接使用相
- *     同的ConstraintValidator实例； 如果缓存中没有，那么会创建新的ConstraintValidator实例。
- *     由于缓存的key是能唯一定位的， 且 ConstraintValidator的实例属性只有在
+ * 注: (懒加载)创建 ConstraintValidator 实例时， 会走缓存; 如果缓存中有，则直接使用相
+ *     同的 ConstraintValidator 实例； 如果缓存中没有，那么会创建新的 ConstraintValidator 实例。
+ *     由于缓存的 key 是能唯一定位的， 且 ConstraintValidator 的实例属性只有在
  *     {@link ConstraintValidator#initialize}方法中才会写；
  *	   在{@link ConstraintValidator#isValid}方法中只是读。
  *     所以不用担心线程安全问题。
  *
- * 注: 如何创建ConstraintValidator实例的，可详见源码
+ * 注: 如何创建 ConstraintValidator 实例的，可详见源码
  *     @see ConstraintTree#getInitializedConstraintValidator(ValidationContext, ValueContext)
  */
 public class JustryDengValidator implements ConstraintValidator<ConstraintsJustryDeng, String> {
@@ -258,7 +258,7 @@ public class JustryDengValidator implements ConstraintValidator<ConstraintsJustr
  
     /**
      * 初始化方法， 在(懒加载)创建一个当前类实例后，会马上执行此方法
-     * 注: 此方法只会执行一次，即:创建实例后马上执行。
+     * 注: 此方法只会执行一次，即: 创建实例后马上执行。
      * @param constraintAnnotation 注解信息模型，可以从该模型中获取注解类中定义的一些信息，如默认值等
      */
     @Override
@@ -300,7 +300,7 @@ private javax.validation.Validator globalValidator;
 @PostMapping("/saveWithCodingValidate")
 public Result saveWithCodingValidate(@RequestBody UserDTO userDTO) {
     Set<ConstraintViolation<UserDTO>> validate = globalValidator.validate(userDTO, UserDTO.Save.class);
-    // 如果校验通过，validate为空；否则，validate包含未校验通过项
+    // 如果校验通过，validate 为空；否则，validate 包含未校验通过项
     if (validate.isEmpty()) {
         // 校验通过，才会执行业务逻辑处理
     } else {
@@ -348,7 +348,7 @@ public Validator validator() {
 @ResponseBody
 public class GlobleExceptionHandler {
     /**
-     * 要拦截的异常Exception
+     * 要拦截的异常 Exception
      */
     @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class})
     public ResponseEntity<Result<?>> handleValidatedException(Exception e) {
@@ -396,7 +396,7 @@ public class IndexController {
             StringBuffer msg=new StringBuffer();
             //获取错误字段集合
             List<FieldError> fieldErrors = result.getFieldErrors();
-            //获取本地locale,zh_CN
+            //获取本地 locale, zh_CN
             Locale currentLocale = LocaleContextHolder.getLocale();
             //遍历错误字段获取错误信息
             for (FieldError fieldError : fieldErrors) {
@@ -423,7 +423,7 @@ public class IndexController {
 
 ## 实现原理
 
-校验触发的时机，其实是从两个点触发，一个跟 SpringMVC 的请求处理过程息息相关，一个是跟 MethodValidationPostProcessor 相关
+校验触发的时机，其实是从两个点触发，一个跟 SpringMVC 的请求处理过程息息相关，一个是跟 `MethodValidationPostProcessor` 相关
 
 ### RequestBody 参数
 
@@ -436,7 +436,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
                                   NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
         parameter = parameter.nestedIfOptional();
-        // 将请求数据封装到DTO对象中
+        // 将请求数据封装到 DTO 对象中
         Object arg = readWithMessageConverters(webRequest, parameter, parameter.getNestedGenericParameterType());
         String name = Conventions.getVariableNameForParameter(parameter);
 
@@ -463,10 +463,10 @@ protected void validateIfApplicable(WebDataBinder binder, MethodParameter parame
     // 获取参数注解，比如@RequestBody、@Valid、@Validated
     Annotation[] annotations = parameter.getParameterAnnotations();
     for (Annotation ann : annotations) {
-        // 先尝试获取@Validated注解
+        // 先尝试获取@Validated 注解
         Validated validatedAnn = AnnotationUtils.getAnnotation(ann, Validated.class);
         // 如果直接标注了@Validated，那么直接开启校验。
-        // 如果没有，那么判断参数前是否有Valid起头的注解。
+        // 如果没有，那么判断参数前是否有 Valid 起头的注解。
         if (validatedAnn != null || ann.annotationType().getSimpleName().startsWith("Valid")) {
             Object hints = (validatedAnn != null ? validatedAnn.value() : AnnotationUtils.getValue(ann));
             Object[] validationHints = (hints instanceof Object[] ? (Object[]) hints : new Object[] {hints});
@@ -498,7 +498,7 @@ public void validate(Object... validationHints) {
 public void validate(Object target, Errors errors, Object... validationHints) {
     if (this.targetValidator != null) {
         processConstraintViolations(
-            // 此处调用Hibernate Validator执行真正的校验
+            // 此处调用 Hibernate Validator 执行真正的校验
             this.targetValidator.validate(target, asValidationGroups(validationHints)), errors);
     }
 }
@@ -506,19 +506,19 @@ public void validate(Object target, Errors errors, Object... validationHints) {
 
 ### 方法级别
 
-上面提到的将参数一个个平铺到方法参数中，然后在每个参数前面声明约束注解的校验方式，就是方法级别的参数校验。实际上，这种方式可用于任何 Spring Bean 的方法上，比如 Controller/ Service 等。其底层实现原理就是 AOP，具体来说是通过 MethodValidationPostProcessor 动态注册 AOP 切面，然后使用 MethodValidationInterceptor 对切点方法织入增强。
+上面提到的将参数一个个平铺到方法参数中，然后在每个参数前面声明约束注解的校验方式，就是方法级别的参数校验。实际上，这种方式可用于任何 Spring Bean 的方法上，比如 `Controller/ Service` 等。其底层实现原理就是 AOP，具体来说是通过 `MethodValidationPostProcessor` 动态注册 AOP 切面，然后使用 `MethodValidationInterceptor` 对切点方法织入增强。
 
 ```java
 public class MethodValidationPostProcessor extends AbstractBeanFactoryAwareAdvisingPostProcessorimplements InitializingBean {
     @Override
     public void afterPropertiesSet() {
-        // 为所有`@Validated`标注的Bean创建切面
+        // 为所有 `@Validated` 标注的 Bean 创建切面
         Pointcut pointcut = new AnnotationMatchingPointcut(this.validatedAnnotationType, true);
-        // 创建Advisor进行增强
+        // 创建 Advisor 进行增强
         this.advisor = new DefaultPointcutAdvisor(pointcut, createMethodValidationAdvice(this.validator));
     }
 
-    // 创建Advice，本质就是一个方法拦截器
+    // 创建 Advice，本质就是一个方法拦截器
     protected Advice createMethodValidationAdvice(@Nullable Validator validator) {
         return (validator != null ? new MethodValidationInterceptor(validator) : new MethodValidationInterceptor());
     }
@@ -539,7 +539,7 @@ public class MethodValidationInterceptor implements MethodInterceptor {
         Method methodToValidate = invocation.getMethod();
         Set<ConstraintViolation<Object>> result;
         try {
-            // 方法入参校验，最终还是委托给Hibernate Validator来校验
+            // 方法入参校验，最终还是委托给 Hibernate Validator 来校验
             result = execVal.validateParameters(
                 invocation.getThis(), methodToValidate, invocation.getArguments(), groups);
         }
@@ -555,7 +555,7 @@ public class MethodValidationInterceptor implements MethodInterceptor {
         }
         // 真正的方法调用
         Object returnValue = invocation.proceed();
-        // 对返回值做校验，最终还是委托给Hibernate Validator来校验
+        // 对返回值做校验，最终还是委托给 Hibernate Validator 来校验
         result = execVal.validateReturnValue(invocation.getThis(), methodToValidate, returnValue, groups);
         // 有异常直接抛出
         if (!result.isEmpty()) {

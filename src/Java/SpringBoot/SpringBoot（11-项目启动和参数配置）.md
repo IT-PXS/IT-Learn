@@ -1,5 +1,5 @@
 ---
-title: SpringBoot项目启动和参数配置
+title: SpringBoot（11-项目启动和参数配置）
 tag:
   - SpringBoot
 category: Java
@@ -27,7 +27,7 @@ java -DmyProperty="some value with spaces" MyApplication
 
 1. 在 `IDEA` 中通过虚拟机选项这里传递
 
-![](SpringBoot项目启动和参数配置/1.png)
+![](SpringBoot（11-项目启动和参数配置）/1.png)
 
 2. 代码中可以通过系统属性 `System.getProperties()` 获取
 
@@ -51,7 +51,7 @@ java -jar app.jar --server.port=4321
 
 1. 在 `IDEA` 中这么传递
 
-![](SpringBoot项目启动和参数配置/2.png)
+![](SpringBoot（11-项目启动和参数配置）/2.png)
 
 2. 代码中是通过 `main` 函数参数 `String [] args` 传入
 

@@ -1,5 +1,5 @@
 ---
-title: SpringBoot请求参数和返回结果定义
+title: SpringBoot（6-请求参数和返回结果定义）
 tag:
   - SpringBoot
 category: Java

@@ -1,5 +1,5 @@
 ---
-title: SpringBoot属性注入
+title: SpringBoot（4-属性注入）
 tag:
   - SpringBoot
 category: Java
@@ -11,7 +11,7 @@ date: 2025-03-20 12:42:19
 
 ### 读取配置参数
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.name=mydlq
@@ -175,13 +175,13 @@ public void setClusterName(String clusterName) {
 
 ### 读取 String 类型
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.name=mydlq
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置
+2. 使用 `@ConfigurationProperties` 注解读取对应配置
 
 ```java
 @Configuration
@@ -202,7 +202,7 @@ public class ConfigurationReadConfig {
 
 ### 读取 List 类型
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.list[0]=a
@@ -210,7 +210,7 @@ my.list[1]=b
 my.list[2]=c
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置
+2. 使用 `@ConfigurationProperties` 注解读取对应配置
 
 ```java
 @Configuration
@@ -230,7 +230,7 @@ public class ConfigurationReadConfig {
 
 ### 读取 Map 类型
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.map.name=xiao-li
@@ -238,7 +238,7 @@ my.map.sex=man
 my.map.age=20
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置
+2. 使用 `@ConfigurationProperties` 注解读取对应配置
 
 ```java
 @Configuration
@@ -258,13 +258,13 @@ public class ConfigurationReadConfig {
 
 ### 读取 Time 类型
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.time=20s
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置
+2. 使用 `@ConfigurationProperties` 注解读取对应配置
 
 ```java
 @Configuration
@@ -288,14 +288,14 @@ public class ConfigurationReadConfig {
 
 ### 读取参数并进行 Valid 校验
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.name=xiao-ming
 my.age=20
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置
+2. 使用 `@ConfigurationProperties` 注解读取对应配置
 
 ```java
 @Validated  // 引入效验注解
@@ -325,14 +325,14 @@ public class ConfigurationReadConfigAndValid {
 
 ### 读取配置到新建 Bean 中
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 user.name=mydlq
 user.age=22
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置到新建的 Bean 对象中
+2. 使用 `@ConfigurationProperties` 注解读取对应配置到新建的 Bean 对象中
 
 ```java
 @Data
@@ -357,15 +357,15 @@ public class ConfigurationReadObject {
 
 ### 从指定配置文件读取
 
-使用 @ConfigurationProperties 注解是默认从 application.properties 或者 application.yaml 中读取配置，有时候我们需要将特定的配置放到单独的配置文件中，这时候需要 @PropertySource 与 ConfigurationProperties 配置使用，使用 @PropertySource 注解指定要读取的文件，使用 @ConfigurationProperties 相关属性
+使用 `@ConfigurationProperties` 注解是默认从 `application.properties` 或者 `application.yaml` 中读取配置，有时候我们需要将特定的配置放到单独的配置文件中，这时候需要 `@PropertySource` 与 `@ConfigurationProperties` 配置使用，使用 `@PropertySource` 注解指定要读取的文件，使用 `@ConfigurationProperties` 相关属性
 
-1. 在 test.txt 文件设置属性
+1. 在 `test.txt` 文件设置属性
 
 ```java
 my.name=mydlq
 ```
 
-2. 使用 @ConfigurationProperties 注解读取对应配置
+2. 使用 `@ConfigurationProperties` 注解读取对应配置
 
 ```java
 @Configuration
@@ -386,13 +386,13 @@ public class ConfigurationReadConfig {
 
 ## Environment
 
-1. 在 application.properties 文件设置属性
+1. 在 `application.properties` 文件设置属性
 
 ```properties
 my.name=mydlq
 ```
 
-2. 使用 Environment 读取配置
+2. 使用 `Environment` 读取配置
 
 ```java
 @Component
