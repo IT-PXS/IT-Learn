@@ -54,23 +54,43 @@ public class TestEventLoop {
 ```java
 public class NettyServer {
     public static void main(String[] args) {
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        // 指定 mainReactor
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        // 指定 subReactor
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        // 用户自定义的 ThreadPool
+        EventExecutorGroup threadPool = new ThreadPool();
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(bossGroup, workerGroup)
+             .channel(NioServerSocketChannel.class)
+             .option(ChannelOption.SO_BACKLOG, 100) // 设置 TCP 参数
+             .childHandler(new ChannelInitializer<SocketChannel>() {
+                 @Override
+                 public void initChannel(SocketChannel ch) throws Exception {
+                     ChannelPipeline p = ch.pipeline();
+                     p.addLast(threadPool,    
+                        new DecoderHandler(),   // 解码处理器
+                        new ComputeHandler());  // 计算处理器
+                        new EncoderHandler(),   // 编码处理器
+                 }
+             });
 
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap.group(bossGroup, workerGroup)
-                        .channel(NioServerSocketChannel.class)
-                        .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                            protected void initChannel(NioSocketChannel ch) {
-                            }
-                        });
-
-        serverBootstrap.bind(8000);
+            // 绑定到本地端口等待客户端连接
+            ChannelFuture f = b.bind(PORT).sync();
+            // 等待接受客户端连接的 Channel 被关闭
+            f.channel().closeFuture().sync();
+        } finally {
+            // 关闭两个线程组
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+            threadPool.shutdown();
+        }
     }
 }
 ```
 
-1. handler()：用于指定服务端启动中的逻辑
+1. handler()：指定 mainReactor 的处理器，处理服务端启动中的逻辑
 
 ```java
 serverBootstrap.handler(new ChannelInitializer<NioServerSocketChannel>() {
@@ -80,10 +100,10 @@ serverBootstrap.handler(new ChannelInitializer<NioServerSocketChannel>() {
 })
 ```
 
-2. childHandler()：处理连接的读写逻辑
+2. childHandler()：指定 subReactor 中的处理器，处理连接的读写逻辑
 3. attr()：给服务端的 channel 指定一些自定义属性。然后通过 channel.attr()取出这个属性，其实就是给 channel 维护一个 map
 4. childAttr()：作用和上面一样，这个是针对客户端的 channel。
-5. option()：给服务端的 channel 设置属性
+5. option()：给服务端的 channel 设置属性，指定 TCP 相关的参数以及一些 Netty 自定义的参数
 
 ```java
 serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024)
@@ -99,6 +119,24 @@ serverBootstrap
         .childOption(ChannelOption.SO_KEEPALIVE, true)
         //开启 Nagle 算法，如果要求高实时性，有数据发送时就马上发送，就关闭，如果需要减少发送次数减少网络交互，就开启。
         .childOption(ChannelOption.TCP_NODELAY, true)
+```
+
+**自定义线程池**
+
+不在 `addLast(Handler)` 方法中指定线程池，那么将使用默认的 subReacor 即 woker 线程池也即 IO 线程池执行处理器中的业务逻辑代码。
+
+又比如，如开始的例子只让 IO 线程池处理 read，write 等 IO 事件会觉得有点大材小用，于是将 decode 和 encode 交给 IO 线程处理，如果此时的 compute 查询需要数据库中的数据，那么代码可改动为如下：
+
+```java
+b.childHandler(new ChannelInitializer<SocketChannel>() {
+     @Override
+     public void initChannel(SocketChannel ch) throws Exception {
+         ChannelPipeline p = ch.pipeline();
+         p.addLast(new DecoderHandler());   // 解码处理器
+         p.addLast(new EncoderHandler());   // 编码处理器
+         p.addLast(threadPool, new ComputeWithSqlHandler());   // 附带 SQL 查询的计算
+     }
+});
 ```
 
 ### Bootstrap
@@ -545,6 +583,53 @@ public class TestPipeline {
     }
 }
 ```
+
+### ChannelHandler
+
+ChannelHandler 并没有方法处理事件，而需要由子类处理：ChannelInboundHandler 拦截和处理入站事件，ChannelOutboundHandler 拦截和处理出站事件。我们已经明白，ChannelPipeline 中的事件不会自动流动，而我们一般需求事件自动流动，Netty 提供了两个 Adapter：ChannelInboundHandlerAdapter 和 ChannelOutboundHandlerAdapter 来满足这种需求。其中的实现类似如下：
+
+```java
+// inboud 事件默认处理过程
+public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+    ctx.fireChannelRegistered();    // 事件传播到下一个 Handler
+}
+
+// outboud 事件默认处理过程
+public void bind(ChannelHandlerContext ctx, SocketAddress localAddress,
+        ChannelPromise promise) throws Exception {
+    ctx.bind(localAddress, promise);  // 事件传播到下一个 Handler
+}
+```
+
+在 Adapter 中，事件默认自动传播到下一个 Handler，这样带来的另一个好处是：用户的 Handler 类可以继承 Adapter 且覆盖自己感兴趣的事件实现，其他事件使用默认实现，不用再实现 ChannelIn/outboudHandler 接口中所有方法，提高效率。
+
+我们常常遇到这样的需求：在一个业务逻辑处理器中，需要写数据库、进行网络连接等耗时业务。Netty 的原则是不阻塞 I/O 线程，所以需指定 Handler 执行的线程池，可使用如下代码：
+
+```java
+static final EventExecutorGroup group = new DefaultEventExecutorGroup(16);
+...
+ChannelPipeline pipeline = ch.pipeline();
+// 简单非阻塞业务，可以使用 I/O 线程执行
+pipeline.addLast("decoder", new MyProtocolDecoder());
+pipeline.addLast("encoder", new MyProtocolEncoder());
+// 复杂耗时业务，使用新的线程池
+pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
+```
+
+ChannelHandler 中有一个 Sharable 注解，使用该注解后多个 ChannelPipeline 中的 Handler 对象实例只有一个，从而减少 Handler 对象实例的创建。代码示例如下：
+
+```java
+public class DataServerInitializer extends ChannelInitializer<Channel> {
+   private static final DataServerHandler SHARED = new DataServerHandler();
+
+   @Override
+   public void initChannel(Channel channel) {
+       channel.pipeline().addLast("handler", SHARED);
+   }
+}
+```
+
+Sharable 注解的使用是有限制的，多个 ChannelPipeline 只有一个实例，所以该 Handler 要求 **无状态**。上述示例中，DataServerHandler 的事件处理方法中，不能使用或改变本身的私有变量，因为 ChannelHandler 是 **非线程安全** 的，使用私有变量会造成线程竞争而产生错误结果。
 
 ### Unpooled
 
