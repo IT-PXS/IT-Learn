@@ -3,7 +3,7 @@ title: CSS（8-弹性盒）
 tag:
  - CSS
 category: 前端
-description: 
+description: CSS弹性盒布局是为了一维布局设计的模型，能轻松解决元素对齐、分布与空间分配问题。通过设置在容器上的display:flex及其相关属性（如justify-content、align-items），可以高效、灵活地控制子元素的排列方式，无论是水平还是垂直方向，从而快速构建自适应的页面结构。
 date: 2025-03-02 12:42:19
 ---
 

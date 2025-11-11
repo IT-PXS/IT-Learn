@@ -1,3 +1,13 @@
+---
+title: Netty（3-基本使用）
+tag: 
+  - Netty
+  - 网络编程
+category: Java
+description: 
+date: 2025-11-03 22:38:34
+---
+
 ## 基本使用
 
 ###  依赖

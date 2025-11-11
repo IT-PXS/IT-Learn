@@ -3,7 +3,7 @@ title: CSS（6-字体、背景）
 tag:
  - CSS
 category: 前端
-description: 
+description: CSS字体与背景属性共同塑造网页的视觉基调。字体属性（如font-family, size, weight）精细控制文本的显示与排版，提升可读性。背景属性（如background-color, image, size）则为元素设置色彩、图像或渐变，丰富页面层次与质感。二者结合，是打造精美用户界面的基础。
 date: 2025-02-28 12:42:19
 ---
 

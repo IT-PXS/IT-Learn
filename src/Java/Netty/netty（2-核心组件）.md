@@ -1,3 +1,13 @@
+---
+title: Netty（2-核心组件）
+tag: 
+  - Netty
+  - 网络编程
+category: Java
+description: 
+date: 2025-11-02 22:38:34
+---
+
 ## EventLoopGroup
 
 EventLoopGroup 是一组 EventLoop 的抽象，Netty 为了更好的利用多核 CPU 资源，一般会有多个 EventLoop 同时工作，每个 EventLoop 维护着一个 Selector 实例。

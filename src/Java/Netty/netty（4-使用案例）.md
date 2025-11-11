@@ -1,3 +1,13 @@
+---
+title: Netty（4-使用案例）
+tag: 
+  - Netty
+  - 网络编程
+category: Java
+description: 
+date: 2025-11-04 22:38:34
+---
+
 ## HTTP 服务
 
 ### 案例 1

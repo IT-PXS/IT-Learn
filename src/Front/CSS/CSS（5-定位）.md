@@ -3,7 +3,7 @@ title: CSS（5-定位）
 tag:
  - CSS
 category: 前端
-description: 
+description: CSS定位用于控制元素在页面上的精确位置。其核心属性position主要有四种值：static（默认流式布局）、relative（相对自身偏移）、absolute（相对最近非static父级定位）和fixed（相对视口固定）。此外，sticky是混合定位，在滚动时产生吸附效果。它们配合top, left等属性，共同实现复杂的页面布局与元素层叠。
 date: 2025-02-27 12:42:19
 ---
 

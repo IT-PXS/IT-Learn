@@ -3,7 +3,7 @@ title: HTML（2-语法结构）
 tag:
   - HTML
 category: 前端
-description: HTML（超文本标记语言）的语法结构基于标签和属性，标签由尖括号包围（如<tag>），通常成对出现（<tag>内容</tag>）。属性用于定义元素的特性，文档结构包括<!DOCTYPE>声明、<html>根元素，以及<head>和<body>部分。HTML5简化了语法，支持自闭合标签（如<br>），强调语义化标签（如<header>、<article>）以提升可读性和SEO。
+description: HTML（超文本标记语言）的语法结构基于标签和属性，标签由尖括号包围，通常成对出现。属性用于定义元素的特性，文档结构包括DOCTYPE声明、html根元素，以及head和body部分。HTML5简化了语法，支持自闭合标签（如br），强调语义化标签（如header、article）以提升可读性和SEO。
 date: 2025-04-16 12:42:19
 ---
 
