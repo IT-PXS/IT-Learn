@@ -4,7 +4,7 @@ tag:
   - Netty
   - 网络编程
 category: Java
-description: 
+description: Netty广泛应用于高性能分布式领域。典型案例如：构建RPC框架（如Dubbo）实现服务间高效通信；作为WebSocket服务器支撑实时推送应用；在游戏行业处理大量玩家并发请求。这些案例均利用了Netty的高吞吐、低延迟特性，证明了其在高并发场景下的卓越能力。
 date: 2025-11-04 22:38:34
 ---
 

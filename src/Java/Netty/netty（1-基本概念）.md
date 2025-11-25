@@ -4,7 +4,7 @@ tag:
   - Netty
   - 网络编程
 category: Java
-description: 
+description: Netty是Java领域高性能异步事件驱动的网络应用框架。其核心架构基于Reactor线程模型，通过Channel、EventLoop和ChannelHandler机制，有效处理并发连接与I/O操作。内置编解码器简化了网络协议开发，广泛应用于RPC、游戏等需要高吞吐量的场景。
 date: 2025-11-01 22:38:34
 ---
 

@@ -4,7 +4,7 @@ tag:
   - Netty
   - 网络编程
 category: Java
-description: 
+description: Netty的基本使用围绕引导服务器与客户端展开。开发者需创建并配置EventLoopGroup、初始化Channel，并为核心组件ChannelPipeline添加必需的ChannelHandler。通过编写业务逻辑Handler处理入站/出站事件，最后绑定端口启动服务，即可构建出高性能的网络应用。
 date: 2025-11-03 22:38:34
 ---
 

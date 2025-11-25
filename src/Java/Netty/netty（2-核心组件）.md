@@ -4,7 +4,7 @@ tag:
   - Netty
   - 网络编程
 category: Java
-description: 
+description: Netty的核心组件构建了其高性能架构。Channel是基础的数据传输通道；EventLoop负责处理I/O事件和任务，实现无阻塞通信；ChannelPipeline装载了一系列ChannelHandler，用于处理入站和出站数据的业务逻辑。这些组件协同工作，构成了Netty强大的异步处理能力。
 date: 2025-11-02 22:38:34
 ---
 

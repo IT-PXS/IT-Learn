@@ -4,7 +4,7 @@ tag:
   - Netty
   - 网络编程
 category: Java
-description: 
+description: 在Netty中，编码（Encoder）将出站对象转换为字节数据，解码（Decoder）将入站字节数据还原为对象。它们作为ChannelHandler被加入Pipeline，实现了网络传输中的字节流与业务逻辑POJO之间的双向转换，是处理网络协议的核心组件。
 date: 2025-11-05 22:38:34
 ---
 
