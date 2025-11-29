@@ -41,4 +41,7 @@ jobs:
         with:
           # 部署文档
           branch: main
-          folder: src/.vuepress/dist
+          folder: 
+            - src/.vuepress/dist
+            - BingSiteAuth.xml
+            - google433a729717f8c7ba.html
