@@ -295,6 +295,11 @@ export default hopeTheme({
       prefix: "fa6-solid:",
       assets: "iconify"
     },
+    // 添加sitemap插件配置
+    sitemap: {
+      // hostname 已在 hopeTheme 根级别配置
+      sitemapFilename: "BingSiteAuth.xml"
+    },
 
     // install @vuepress/plugin-pwa and uncomment these if you want a PWA
     // pwa: {
