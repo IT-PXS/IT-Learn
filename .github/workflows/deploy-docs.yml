@@ -36,12 +36,15 @@ jobs:
           npm run docs:build
           > src/.vuepress/dist/.nojekyll
 
+      - name: 准备额外文件
+        run: |
+          # 将需要包含的文件复制到 dist 文件夹
+          cp BingSiteAuth.xml src/.vuepress/dist/
+          cp google433a729717f8c7ba.html src/.vuepress/dist/
+
       - name: 部署文档
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           # 部署文档
           branch: main
-          folder: 
-            - src/.vuepress/dist
-            - BingSiteAuth.xml
-            - google433a729717f8c7ba.html
+          folder: src/.vuepress/dist
