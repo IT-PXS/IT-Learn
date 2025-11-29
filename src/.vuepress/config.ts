@@ -20,7 +20,7 @@ export default defineUserConfig({
   plugins: [
     baiduAnalyticsPlugin({
       id: '22f9890054d18a4a0df8eeb8eafb976b',
-    }),
+    })
   ],
   // 排除 TODO 和 More 等文件
   pagePatterns: ["**/*.md", "!.vuepress", "!node_modules", "!TODO", "!More", "!Java/Socket"],

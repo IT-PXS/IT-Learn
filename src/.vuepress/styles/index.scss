@@ -1,14 +1,131 @@
 // // place your custom styles here
 
-// // 修复导航栏下拉菜单文字大写问题
-// .navbar .dropdown-wrapper .dropdown-title,
-// .navbar .dropdown-wrapper .dropdown-item,
-// .navbar .dropdown-wrapper .dropdown-subtitle {
-//     text-transform: none !important;
-// }
+// 针对文章右侧的toc目录结构
+// TOC 有序列表样式 - 所有层级使用连续数字编号
+#toc {
 
-// // 修复侧边栏文字大写问题
-// .sidebar .sidebar-heading,
-// .sidebar .sidebar-link {
-//     text-transform: none !important;
-// }
+    // 一级列表
+    .vp-toc-list {
+        // 初始化一级计数器
+        counter-reset: toc-level1;
+
+        // 一级列表项：递增一级计数器
+        >.vp-toc-item {
+            counter-increment: toc-level1;
+
+            // 使用计数器显示编号
+            >.vp-toc-link::before {
+                content: counter(toc-level1) ". ";
+            }
+        }
+
+        // 嵌套列表（在 li 内部）
+        >li>.vp-toc-list {
+            // 重置二级计数器
+            counter-reset: toc-level2;
+
+            // 二级列表项：递增二级计数器
+            >.vp-toc-item {
+                counter-increment: toc-level2;
+
+                // 使用计数器显示编号（父级.当前级）
+                >.vp-toc-link::before {
+                    content: counter(toc-level1) "." counter(toc-level2) " ";
+                }
+            }
+
+            // 三级嵌套列表
+            >li>.vp-toc-list {
+                counter-reset: toc-level3;
+
+                // 三级列表项：递增三级计数器
+                >.vp-toc-item {
+                    counter-increment: toc-level3;
+
+                    // 使用计数器显示编号（父级.父级.当前级）
+                    >.vp-toc-link::before {
+                        content: counter(toc-level1) "." counter(toc-level2) "." counter(toc-level3) " ";
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 针对文章的标题结构
+#markdown-content {
+    counter-reset: toc-level1;
+
+    h2 {
+        counter-reset: toc-level2;
+
+        >.header-anchor {
+            >span {
+                counter-increment: toc-level1;
+
+                // 使用计数器显示编号 - 需要伪元素才能显示
+                &::before {
+                    content: counter(toc-level1) ". ";
+                }
+            }
+        }
+    }
+
+    h3 {
+        counter-reset: toc-level3;
+
+        >.header-anchor {
+            >span {
+                counter-increment: toc-level2;
+
+                &::before {
+                    content: counter(toc-level1) "." counter(toc-level2) " ";
+                }
+            }
+        }
+    }
+
+    h4 {
+        >.header-anchor {
+            >span {
+                counter-increment: toc-level3;
+
+                &::before {
+                    content: counter(toc-level1) "." counter(toc-level2) "." counter(toc-level3) " ";
+                }
+            }
+        }
+    }
+
+}
+
+
+#markdown-content {
+    .vp-catalog {
+        >.vp-catalog-list {
+            >.vp-catalog-item {
+                >.vp-catalog-child-title {
+                    >.vp-catalog-title {
+                        &::before {
+                            content: counter(catalog-item) ". ";
+                        }
+                    }
+                }
+
+                >.vp-child-catalogs {
+                    >.vp-child-catalog {
+                        >.vp-sub-catalogs {
+                            >.vp-sub-catalog {
+                                >a {
+                                    &::before {
+                                        content: counter(catalog-item) "." counter(child-catalog) "." counter(sub-catalog) " "
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

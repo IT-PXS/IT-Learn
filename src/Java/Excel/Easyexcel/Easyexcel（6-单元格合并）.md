@@ -6,7 +6,7 @@ description: EasyExcel在数据导出时，自定义单元格合并功能极大�
 date: 2024-11-03 18:42:19
 ---
 
-## 🎯 单元格合并概述
+## 单元格合并概述
 
 EasyExcel 提供了多种单元格合并的方式，可以根据实际需求选择合适的策略：
 
@@ -16,7 +16,7 @@ EasyExcel 提供了多种单元格合并的方式，可以根据实际需求选�
 
 单元格合并功能可以显著提升 Excel 文件的可读性和组织性，特别适用于需要将相关信息整合在一起的场景。
 
-## 📝 注解方式设置合并
+## 注解方式设置合并
 
 ### @ContentLoopMerge 注解
 
@@ -84,7 +84,7 @@ public class User {
 }
 ```
 
-## 🔧 策略方式设置合并
+## 策略方式设置合并
 
 ### LoopMergeStrategy 循环合并策略
 
@@ -356,7 +356,7 @@ public void download2(HttpServletResponse response) {
 
 ![绝对位置合并效果](Easyexcel（6-单元格合并）/3.png)
 
-## 🛠️ 自定义合并策略
+## 自定义合并策略
 
 ### AbstractMergeStrategy 抽象合并策略
 

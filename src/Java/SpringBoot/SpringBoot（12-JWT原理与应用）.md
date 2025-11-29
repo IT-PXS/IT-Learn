@@ -1,11 +1,12 @@
 ---
-title: JWT原理与应用
+title: SpringBoot（12-JWT原理与应用）
 tag:
   - SpringBoot
 category: Java
 description: JWT（JSON Web Token）是一种紧凑的安全令牌格式，广泛用于身份认证和信息传递。它由Header、Payload和Signature组成，采用Base64编码，支持HMAC或RSA等签名机制，确保数据完整性。JWT适用于无状态认证，如OAuth 2.0，便于分布式系统中高效传递用户身份信息。
-date: 2025-04-05 12:42:19
+date: 2025-06-25 12:42:19
 ---
+
 
 ## 出现背景
 

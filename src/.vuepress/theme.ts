@@ -206,6 +206,10 @@ export default hopeTheme({
     blog: {
       excerpt: false
     },
+    // 目录配置
+    catalog: {
+      index: true
+    },
 
     // 启用搜索功能
     search: {

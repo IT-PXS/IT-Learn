@@ -23,7 +23,7 @@ export const zhNavbar = navbar([
   },
   {
     text: "Java",
-    link: "Java/SpringSecurity5/",
+    link: "Java/",
     icon: "fa6-brands:java",
   },
   {

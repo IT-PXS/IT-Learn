@@ -6,7 +6,7 @@ description: EasyExcel支持多种方式自定义列宽，包括注解方式、�
 date: 2024-11-02 18:42:19
 ---
 
-## 🎯 列宽设置概述
+## 列宽设置概述
 
 EasyExcel 提供了多种自定义列宽的方式，可以根据实际需求选择合适的策略：
 
@@ -16,7 +16,7 @@ EasyExcel 提供了多种自定义列宽的方式，可以根据实际需求选�
 
 选择合适的列宽策略可以显著提升 Excel 文件的可读性和美观性，确保数据内容完整显示。
 
-## 📝 注解方式设置列宽
+## 注解方式设置列宽
 
 使用 `@ColumnWidth` 注解可以快速为指定字段设置固定列宽。
 
@@ -44,7 +44,7 @@ public class WidthAndHeightData {
 
 ![XSSFSheet源码](Easyexcel（5-自定义列宽）/5.png)
 
-## 🔧 策略方式设置列宽
+## 策略方式设置列宽
 
 ### 抽象基类
 
@@ -282,7 +282,7 @@ public void download1(HttpServletResponse response) {
 
 ![自适应宽度效果](Easyexcel（5-自定义列宽）/2.png)
 
-## 🛠️ 自定义列宽策略
+## 自定义列宽策略
 
 ### CustomWidthStyleStrategy 工具类
 

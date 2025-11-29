@@ -6,14 +6,14 @@ description: EasyExcel 是一个便捷、高效的Excel读写库，尤其在大�
 date: 2024-10-27 18:42:19
 ---
 
-## 🔄 导出方式对比
+## 导出方式对比
 
 | 导出方式 | 适用场景 | 优点 | 缺点 |
 |----------|----------|------|------|
 | **一次性写入** | 小数据量、简单导出 | 代码简单、易于理解 | 内存占用大、大数据量时性能差 |
 | **分批写入** | 大数据量、复杂导出 | 内存占用小、性能好 | 代码复杂、需要手动管理流 |
 
-## 🌐 响应头设置
+## 响应头设置
 
 通过设置文件导出的响应头，可以自定义文件导出的名字信息等，确保文件能够正确下载和显示。
 
@@ -61,7 +61,7 @@ public static void setExcelResponseHeaders(HttpServletResponse response, String 
 | `Cache-Control` | 缓存控制 | `must-revalidate, post-check=0, pre-check=0` |
 | `Content-Transfer-Encoding` | 传输编码 | `binary` |
 
-## 📊 单Sheet导出
+## 单Sheet导出
 
 ### 一次性写入数据
 
@@ -297,7 +297,7 @@ public void download4(HttpServletResponse response) {
 ![](Easyexcel（3-文件导出）/3.png)
 
 
-## 📑 多Sheet导出
+## 多Sheet导出
 
 通过 `EasyExcel.writerSheet` 创建对应的 sheet，然后在写入 sheet 时指定对应的 `WriteSheet` 即可，同时可指定每个 Sheet 对应的对象。
 
@@ -341,7 +341,7 @@ public void download6(HttpServletResponse response) {
 ![](Easyexcel（3-文件导出）/4.png)
 
 
-## 🎨 高级功能
+## 高级功能
 
 ### 样式自定义
 
