@@ -27,7 +27,8 @@ export default hopeTheme({
     end: ["Language", "Repo", "Outlook", "Search"],
   },
 
-  sidebarSorter: ["date"],
+  // 侧边栏排序规则
+  sidebarSorter: ["date", "title"],
 
   blog: {
     medias: {
