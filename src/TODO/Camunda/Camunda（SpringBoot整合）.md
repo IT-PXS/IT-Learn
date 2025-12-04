@@ -438,9 +438,257 @@ public class ServiceTask implements JavaDelegate {
 
 ![](Camunda（SpringBoot整合）/21.png)  
 
-### 审批
+### 开始流程
 
 ![](Camunda（SpringBoot整合）/22.png)
 
 点击 Add a variable，新增一个 approve 参数，这里就是个${approve} 传参，选择 Boolean，Value 选中代表 True（同意）
 
+### 监听器回调
+
+监听审批节点的事件
+
+```yaml
+camunda:
+  bpm:
+    #开启监听
+    eventing:
+      execution: true
+      history: true
+      task: true
+```
+
+```java
+@Component
+public class AuditListener {
+
+    @EventListener(condition = "#delegateTask.eventName=='create' && #delegateTask.name=='审批'")
+    public void notify(DelegateTask delegateTask) {
+        System.out.println("审核流程 - USER TASK - " + delegateTask.getEventName());
+        Object assignee = delegateTask.getAssignee();
+        System.out.println("审批人：" + assignee);
+        Object approve = delegateTask.getVariable("approve");
+        System.out.println("审批结果：" + approve);
+        System.out.println("===========================");
+    }
+}
+```
+
+### 代码生成流程图
+
+```java
+@RestController
+public class TestController {
+
+    /**
+     * 动态生成流程图
+     */
+    @GetMapping("/generateBPMN")
+    public void autoGenerateBPMN() throws IOException {
+        BpmnModelInstance instance = Bpmn.createProcess()
+                .startEvent()
+                .userTask()
+                .id("question")
+                .exclusiveGateway()
+                .name("Everything fine?")
+                .condition("yes", "#{fine}")
+                .serviceTask()
+                .userTask()
+                .endEvent()
+                .moveToLastGateway()
+                .condition("no", "#{!fine}")
+                .userTask()
+                .connectTo("question")
+                .done();
+        Bpmn.validateModel(instance);
+        File file = File.createTempFile("bpmn-model-api-", ".bpmn");
+        Bpmn.writeModelToFile(file, instance);
+    }
+}
+```
+
+![](Camunda（SpringBoot整合）/23.png)
+
+## 常用方法
+
+| 类名 (Class)         | 作用 (功能描述)          |
+| -------------------- | ------------------------ |
+| RepositoryService    | 操作流程定义             |
+| RuntimeService       | 操作流程实例             |
+| TaskService          | 操作任务                 |
+| IdentityService      | 操作用户、租户或者组     |
+| HistoryService       | 查询历史表相关数据       |
+| AuthorizationService | 授权相关服务             |
+| FormService          | 操作流程表单             |
+| ManagementService    | 执行cmd以及job相关服务   |
+| CaseService          | CMMN（案例管理）相关操作 |
+| FilterService        | 过滤相关服务             |
+| ExternalTaskService  | 外部任务相关服务         |
+| DecisionService      | DMN（决策引擎）相关服务  |
+
+## 流程相关API
+
+以下都可以在流程历史表 act_hi_procinst 里查询
+
+### 创建流程
+
+会同时创建第一个任务
+
+```java
+ProcessInstance instance = runtimeService.startProcessInstanceByKey(processKey, params);
+runtimeService.startProcessInstanceByKey("key");
+```
+
+### 暂停流程
+
+流程暂停后，再执行相关任务会报错，需要先重新激活任务
+
+```java
+runtimeService.suspendProcessInstanceById(instance.getId());
+```
+
+### 重新激活流程
+
+```java
+runtimeService.activateProcessInstanceById(instance.getId());
+```
+
+### 删除流程
+
+会同时删除任务
+
+```java
+runtimeService.deleteProcessInstance(instance.getId(), "手动删除");
+```
+
+## 任务相关API
+
+基于service的查询类，都可先构建一个 query，然后在附上查询条件，实例几个
+
+```java
+List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
+List<Task> list = taskService.createTaskQuery().taskAssignee("zhangsan").list();
+List<ProcessInstance> instances = runtimeService.createProcessInstanceQuery().listPage(1, 10);
+```
+
+### 查询历史任务
+
+```java
+List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().list();
+```
+
+### 查询当前任务/分页
+
+```java
+List<Task> list = taskService.createTaskQuery().orderByTaskCreateTime().desc().list();
+List<Task> list = taskService.createTaskQuery().orderByTaskCreateTime().desc().listPage(1,10);
+```
+
+### 任务回退
+
+大体思路是拿到当前的任务，及当前任务的上一个历史任务，然后重启
+
+```java
+Task activeTask = taskService.createTaskQuery()
+                .taskId(taskId)
+                .active()
+                .singleResult();
+List<HistoricTaskInstance> historicTaskInstance = historyService.createHistoricTaskInstanceQuery()
+        .processInstanceId(instanceId)
+        .orderByHistoricActivityInstanceStartTime()
+        .desc()
+        .list();
+
+List<HistoricTaskInstance> historicTaskInstances = historicTaskInstance.stream().filter(v -> !v.getTaskDefinitionKey().equals(activeTask.getTaskDefinitionKey())).toList();
+
+Assert.notEmpty(historicTaskInstances, "当前已是初始任务！");
+HistoricTaskInstance curr = historicTaskInstances.get(0);
+
+runtimeService.createProcessInstanceModification(instanceId)
+        .cancelAllForActivity(activeTask.getTaskDefinitionKey())
+        .setAnnotation("重新执行")
+        .startBeforeActivity(curr.getTaskDefinitionKey())
+        .execute();
+```
+
+### 任务执行人及发起人设置
+
+```java
+//根据任务id设置执行人
+taskService.setAssignee(task.getId(), UserUtil.getUserId().toString());
+```
+
+### 同意审批
+
+```java
+Task task = taskService.createTaskQuery().singleResult();
+String comment = "同意";
+taskService.createComment(task.getId(), task.getProcessInstanceId(), comment);
+taskService.complete(task.getId());
+```
+
+### 退回审批任务
+
+从当前审批任务，退回到已审批的一个或多个任务节点。退回后，已审批节点重新生成审批任务
+
+```java
+runtimeService.createProcessInstanceModification(instanceId)
+              .cancelAllForActivity(activeTask.getTaskDefinitionKey())
+              .setAnnotation("重新执行")
+              .startBeforeActivity(curr.getTaskDefinitionKey())
+              .execute();
+```
+
+## 流程变量
+
+包括流程中产生的变量信息，包括控制流程流转的变量，网关、业务表单中填写的流程需要用到的变量等
+
+#### 流程变量变量传递
+
+变量最终会存在 act_ru_variable 这个表里面
+
+在绘制流程图的时候，如果是用户任务（userService） 可以设置变量，比如执行人，
+
+![](https://cdn.nlark.com/yuque/0/2025/png/12836966/1764392340760-f6016d52-766c-4c0d-bb75-4c7552ade9f7.png)
+
+写法有这么几种方式
+
+1. 写死，就比如 zhangsan
+2. 表达式，比如上面写的 ${user}，这种需要传入参数，其实就是启动参数的时候传入，传入参数，可选值为一个Map<String, Object>，之后的流程可查看次参数，上面写的是 user， 所以map里面的key需要带着user，不然会报错。
+
+关于扩展变量，可在流程图绘制这么设定，传递方式还是一样，
+
+流程图里面在下面写：
+
+![](https://cdn.nlark.com/yuque/0/2025/png/12836966/1764392360952-8b83fe4f-fdf4-4a3e-9f8e-ced0cdd076d2.png)
+
+```java
+ProcessInstance instance = runtimeService.startProcessInstanceByKey(key, new HashMap<>());
+```
+
+#### 变量设置
+
+```java
+runtimeService.setVariable(instance.getId(), Constants.PATIENT_ID, relatedId);
+
+// 设置表单属性
+ProcessInstance instance = runtimeService.startProcessInstanceByKey(key, new HashMap<>());
+runtimeService.setVariable(instance.getId(), "key", "value");
+```
+
+#### 变量查询
+
+```java
+ Object variable = runtimeService.getVariable(instance.getId(), Constants.GENERAL_ID);
+```
+
+#### 历史变量查询
+
+```java
+HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery().processInstanceId(bo.getId().toString()).
+            variableName(Constants.PATIENT_ID).singleResult();
+//变量值
+variableInstance.getValue();
+//变量名称
+variableInstance.getName();
+```
