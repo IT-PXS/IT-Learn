@@ -466,6 +466,7 @@ public void uploadFile6(MultipartFile file) {
 
 1. 使用构造器的方式传入 Sheet 对应的下标和自定义线程池，使用这种分批处理的方式，避免内存的消耗，加快文件的解析入库
 2. 数据库入库时可以使用 MySQL 的批量插入语法，同时指定每次插入数据的大小，相较于 MyBatisPlus 的批量插入方法较快
+3. 指定 ArrayList 的大小，减少扩容次数
 
 
 ```java
@@ -481,7 +482,7 @@ public class UserExcelListener3 extends AnalysisEventListener<UserExcel> {
 
     private Integer sheetNo;
     private Executor executor;
-    private List<UserExcel> userExcelList = new ArrayList<>();
+    private List<UserExcel> userExcelList = new ArrayList<BATCH_SIZE>();
 
     public UserExcelListener3(Integer sheetNo, Executor executor) {
         this.sheetNo = sheetNo;
