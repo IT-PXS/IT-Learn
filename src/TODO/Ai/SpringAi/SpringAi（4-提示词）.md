@@ -4,6 +4,8 @@
 
 ![](SpringAi（4-提示词）/1.png)
 
+![](SpringAi（4-提示词）/6.png)
+
 ## 核心策略
 
 1. 清晰明确的指令：直接说明任务类型（如总结、分类、生成），避免模糊表达。
@@ -29,7 +31,7 @@ Clinical diagnosis: probable glioma.
 
 5. 指定输出格式：明确要求 JSON、HTML 或特定结构。
 
-6. 给模型设定一个角色：设定角色可以让模型在正确的背景下回答问题，减少模型"幻觉" 
+6. 给模型设定一个角色：设定角色可以让模型在正确的背景下回答问题，减少模型 "幻觉" 
 
 - 引用原文：要求答案基于提供的数据（"如根据以下文章 .... "）
 
@@ -122,6 +124,8 @@ Assisant：此请求违反安全政策。
 
 ## 基本使用
 
+### PromptTemplate
+
 ```java
 @RestController
 public class PromptController {
@@ -137,25 +141,45 @@ public class PromptController {
                 .stream()
                 .content();
     }
-
-    @RequestMapping(value = "/promptV2", produces = "text/html;charset=UTF-8")
-    public Flux<String> promptV2(@RequestParam("topic") String topic, @RequestParam("voice") String voice) {
-        PromptTemplate promptTemplate = new PromptTemplate("请给我讲一个关于{topic}主题的故事");
-        Message userMessage = promptTemplate.createMessage(Map.of("topic", topic));
-
-        String systemText = "你是一个擅长讲中国古典故事的高手，请你用 {voice} 的语言风格回复用户的请求。";
-        SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(systemText);
-        Message systemMessage = systemPromptTemplate.createMessage(Map.of("voice", voice));
-
-        Prompt prompt = new Prompt(List.of(userMessage, systemMessage));
-        return chatClient.prompt(prompt)
-                .stream()
-                .content();
-    }
 }
 ```
 
-## 进阶（TODO）
+### SystemPromptTemplate
+
+```java
+@RequestMapping(value = "/promptV2", produces = "text/html;charset=UTF-8")
+public Flux<String> promptV2(@RequestParam("topic") String topic, @RequestParam("voice") String voice) {
+    PromptTemplate promptTemplate = new PromptTemplate("请给我讲一个关于{topic}主题的故事");
+    Message userMessage = promptTemplate.createMessage(Map.of("topic", topic));
+
+    String systemText = "你是一个擅长讲中国古典故事的高手，请你用 {voice} 的语言风格回复用户的请求。";
+    SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(systemText);
+    Message systemMessage = systemPromptTemplate.createMessage(Map.of("voice", voice));
+
+    Prompt prompt = new Prompt(List.of(userMessage, systemMessage));
+    return chatClient.prompt(prompt)
+            .stream()
+            .content();
+}
+```
+
+### 自定义模板渲染器
+
+```java
+@RequestMapping(value = "/promptV3", produces = "text/html;charset=UTF-8")
+public Flux<String> promptV3() {
+    PromptTemplate promptTemplate = PromptTemplate.builder()
+            .renderer(StTemplateRenderer.builder().startDelimiterToken('<').endDelimiterToken('>').build())
+            .template("告诉我5部配乐由<composer>创作的电影的名字。")
+            .build();
+    String prompt = promptTemplate.render(Map.of("composer", "John Williams"));
+    return chatClient.prompt(prompt)
+            .stream()
+            .content();
+}
+```
+
+## 进阶
 
 ```java
 public class SystemConstants {
@@ -270,10 +294,10 @@ public class PromptController {
 }
 ```
 
-![](https://cdn.nlark.com/yuque/0/2025/png/12836966/1764920327130-8d576ceb-757a-4ee7-a9fb-7c25381a72c0.png)
+![](SpringAi（4-提示词）/2.png)
 
-![](https://cdn.nlark.com/yuque/0/2025/png/12836966/1764920332731-9e21f91b-286b-418f-8693-7359c8c69674.png)
+![](SpringAi（4-提示词）/3.png)
 
-![](https://cdn.nlark.com/yuque/0/2025/png/12836966/1764920340151-762578b8-e2f1-4a04-a970-98b1989d978d.png)
+![](SpringAi（4-提示词）/4.png)
 
-![](https://cdn.nlark.com/yuque/0/2025/png/12836966/1764920346507-6471b53d-7661-4e02-a2f1-513805c69a47.png)
+![](SpringAi（4-提示词）/5.png)

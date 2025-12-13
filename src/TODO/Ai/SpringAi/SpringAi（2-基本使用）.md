@@ -9,7 +9,7 @@
 <dependency>
     <groupId>org.springframework.ai</groupId>
     <artifactId>spring-ai-starter-model-openai</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.2</version>
 </dependency>
 
 <dependencyManagement>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-bom</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.2</version>
         </dependency>
     </dependencies>
 </dependencyManagement>
@@ -258,9 +258,9 @@ public class ChatClientController {
 默认情况下，模板变量由 `{}` 语法标识。如果您打算在提示中包含 JSON，您可能需要使用不同的语法来避免与 JSON 语法冲突。例如，您可以使用 `<` 和 `>` 分隔符。
 
 ```java
-String answer = ChatClient.create(chatModel).prompt()
-    .user(u -> u
-            .text("composed by <composer>")
+String answer = ChatClient.create(chatModel)
+    .prompt()
+    .user(u -> u.text("composed by <composer>")
             .param("composer", "John Williams"))
     .templateRenderer(StTemplateRenderer.builder()
                       .startDelimiterToken('<')
@@ -299,7 +299,7 @@ ChatClient.builder： 会得到一个 ChatClient.Builder 工厂对象，利用�
 
 ```java
 @Bean
-public ChatClient chatClient(OllamaChatModel model) {
+public ChatClient chatClient(OpenAiChatModel model) {
     return ChatClient.builder(model) // 创建ChatClient工厂实例
             .defaultSystem("你的名字叫小板。请以友好、乐于助人和愉快的方式解答学生的各种问题。")
             .build(); // 构建ChatClient实例
@@ -310,7 +310,7 @@ public ChatClient chatClient(OllamaChatModel model) {
 
 ```java
 @Bean
-public ChatClient chatClient(OllamaChatModel model) {
+public ChatClient chatClient(OpenAiChatModel model) {
     return ChatClient.builder(model) // 创建ChatClient工厂实例
             .defaultSystem("你的名字叫{name}。请以友好、乐于助人和愉快的方式解答学生的各种问题。")
             .build(); // 构建ChatClient实例
@@ -318,14 +318,15 @@ public ChatClient chatClient(OllamaChatModel model) {
 ```
 
 ```java
-String answer = ChatClient.create(chatModel).prompt()
+String answer = ChatClient.create(chatModel)
+    .prompt()
     .system(sp -> sp.param("name", name))
     .user("你是谁")
     .call()
     .content();
 ```
 
-### 日志配置
+### Advisor 配置
 
 默认情况下，应用于 AI 的交互是不记录日志的，我们无法得知 SpringAI 组织的提示词到底长什么样，有没有问题。这样不方便我们调试。
 
@@ -344,9 +345,11 @@ Spring 提供了一些 Advisor 的默认实现，来实现一些基本的增强�
 
 只需要在配置 ChatClient  添加日志记录 Advisor
 
+#### 日志配置
+
 ```java
 @Bean
-public ChatClient chatClient(OllamaChatModel model) {
+public ChatClient chatClient(OpenAiChatModel model) {
     return ChatClient.builder(model) // 创建ChatClient工厂实例
             .defaultSystem("你是一个热心、可爱的智能助手")
             .defaultAdvisors(new SimpleLoggerAdvisor()) // 添加默认的Advisor,记录日志
@@ -359,5 +362,28 @@ public ChatClient chatClient(OllamaChatModel model) {
 logging:
   level:
     org.springframework.ai: debug # AI对话的日志级别
+```
+
+#### 敏感词配置
+
+```java
+@Bean
+public ChatClient chatClient(OpenAiChatModel model) {
+    return ChatClient.builder(model) // 创建ChatClient工厂实例
+            .defaultSystem("你是一个热心、可爱的智能助手")
+            .defaultAdvisors(new SimpleLoggerAdvisor()) // 添加默认的Advisor,记录日志
+        	.defaultAdvisors(safeGuardAdvisor())
+            .build(); // 构建ChatClient实例
+}
+
+@Bean
+public SafeGuardAdvisor safeGuardAdvisor() {
+    return SafeGuardAdvisor.builder()
+            // 设置敏感词列表，用于过滤用户输入和AI输出中的不当内容
+            .sensitiveWords(Arrays.asList("黄色"))
+            // 当检测到敏感内容时返回的提示信息
+            .failureResponse("请注意措辞")
+            .build();
+}
 ```
 
