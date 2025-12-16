@@ -1,6 +1,6 @@
 ## 基本介绍
 
-RAG 叫做检索增强生成。简单来说就是把信息检索技术和大模型结合的方案。大模型从知识角度存在很多限制：
+RAG 叫做检索增强生成，简单来说就是把信息检索技术和大模型结合的方案。大模型从知识角度存在很多限制：
 
 1. 时效性查：大模型训练比较耗时，其训练数据都是旧数据，无法实时更新。
 
@@ -36,8 +36,9 @@ RAG 的下一阶段是处理用户输入。当需要 AI 模型回答用户的提
 
 ```xml
 <dependency>
-   <groupId>org.springframework.ai</groupId>
-   <artifactId>spring-ai-advisors-vector-store</artifactId>
+    <groupId>org.springframework.ai</groupId>
+    <artifactId>spring-ai-advisors-vector-store</artifactId>
+    <version>1.1.2</version>
 </dependency>
 ```
 
@@ -177,6 +178,7 @@ RetrievalAugmentationAdvisor 可以更好的体现检索增强。
 <dependency>
     <groupId>org.springframework.ai</groupId>
     <artifactId>spring-ai-rag</artifactId>
+    <version>1.1.2</version>
 </dependency>
 ```
 
@@ -228,7 +230,7 @@ VectorStoreDocumentRetriever 从向量数据库检索与输入查询语义相似
 
 ## ContextualQueryAugmenter
 
-RetrievalAugmentationAdvisor 不允许检索到的上下文为空。如果解决该问题可以使用 ContextualQueryAugmenter，利用所提供文档的内容上下文数据增强用户查询。
+RetrievalAugmentationAdvisor 不允许检索到的上下文为空，当没有找到相关文档时，它会指示模型不要回答用户查询。如果解决该问题可以使用 ContextualQueryAugmenter，利用所提供文档的内容上下文数据增强用户查询。
 
 ```java
 @RequestMapping("/chatRagV3")
@@ -303,7 +305,7 @@ public String chatRagV4(@RequestParam("msg") String msg) {
 
 RewriteQueryTransformer 利用大语言模型重写用户查询，从而在查询向量数据库或搜索引擎等目标系统时获得更好结果。
 
-当用户查询冗长、含歧义或包含可能影响搜索结果质量的无关信息时，该转换器（Transformer）特别有效
+当用户查询冗长、含歧义或包含可能影响搜索结果质量的无关信息时，该转换器（Transformer）特别有效，它会在检索之前重写用户的原始查询，使其更加明确和详细，从而显著提高检索得到质量
 
 ```java
 @RequestMapping("/chatRagV5")
