@@ -1,3 +1,14 @@
+---
+title: SpringAi（2-基本使用）
+tag: 
+    - SpringAi
+    - Ai
+category: Java
+description: Spring AI简化了在Spring应用中集成AI功能的过程。它提供统一API，支持OpenAI、Azure等主流模型，实现快速对话、文生图等AI调用。开发者只需简单配置即可将大模型能力融入项目，大幅降低AI应用开发门槛。
+date: 2025-12-02 22:38:34
+---
+
+
 ## 依赖及配置
 
 ```xml
@@ -80,7 +91,7 @@ public class ChatModelController {
     private ChatModel chatModel;
  
     @RequestMapping("/chat")
-    public String chat(@RequestParam(defaultValue = "讲个笑话") String prompt) {
+    public String chat(@RequestParam("msg") String msg) {
         return chatModel.call(msg);
     }
 }

@@ -1,3 +1,14 @@
+---
+title: SpringAi（4-提示词）
+tag: 
+    - SpringAi
+    - Ai
+category: Java
+description: Spring AI 的提示词模板（Prompt Templates）是其核心抽象。它允许开发者通过占位符和变量动态构建结构化的 AI 请求，将系统指令、用户输入和上下文数据高效封装，极大地提升了对生成内容可控性与一致性的管理能力。
+date: 2025-12-04 22:38:34
+---
+
+
 ## 基本介绍
 
 学习 Prompt 工程的目标是：通过精心设计和优化输入提示来引 l 导 AI 模型生成符合预期的高质量输出。

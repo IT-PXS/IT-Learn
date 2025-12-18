@@ -1,3 +1,14 @@
+---
+title: SpringAi（8-MCP）
+tag: 
+    - SpringAi
+    - Ai
+category: Java
+description: Spring AI 集成了模型上下文协议，这是一种新兴的标准化接口。MCP 旨在将大型语言模型与外部工具和数据源安全、动态地连接起来，从而增强模型的能力，使其能更可靠、可控地访问实时信息和执行特定操作。
+date: 2025-12-08 22:38:34
+---
+
+
 ## 基本介绍
 
 MCP (Model Context Protocol) 是一个开放协议，用于标准化应用程序如何向 LLM 提供上下文。可以将 MCP 想象成 AI 应用程序的 USB 接口。就像 USB 为设备连接各种外设和配件提供标准化方式一样，MCP 为 AI 模型连接不同的数据源和工具提供了标准化的方式。

@@ -1,3 +1,14 @@
+---
+title: SpringAi（6-向量）
+tag: 
+    - SpringAi
+    - Ai
+category: Java
+description: Spring AI 为向量数据库交互和文本向量化提供了统一抽象。其核心 API 封装了嵌入生成与相似度检索的通用操作，使应用能轻松实现语义搜索与 RAG 架构，屏蔽不同底层向量库（如 Pinecone、Milvus）的实现差异。
+date: 2025-12-06 22:38:34
+---
+
+
 ## 向量介绍
 
 向量是空间中有方向和长度的量，空间可以是二维，也可以是多维

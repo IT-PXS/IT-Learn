@@ -45,6 +45,12 @@ export const zhSidebar = sidebar({
       children: "structure",
       collapsible: true,
     },
+    {
+      text: "SpringAi",
+      prefix: "SpringAi/",
+      children: "structure",
+      collapsible: true,
+    },
   ],
   "/Front/": [
     {

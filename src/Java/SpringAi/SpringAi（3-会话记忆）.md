@@ -1,3 +1,14 @@
+---
+title: SpringAi（3-会话记忆）
+tag: 
+    - SpringAi
+    - Ai
+category: Java
+description: Spring AI 的会话记忆（Conversation Memory）机制负责在持续对话中存储和关联历史消息，使 AI 模型能理解上下文，实现多轮连贯交互。其提供了易用的 API 和多种存储策略，开发者可灵活选择实现短期或持久化的记忆管理。
+date: 2025-12-03 22:38:34
+---
+
+
 ## 基本介绍
 
 ### 对话出现问题
