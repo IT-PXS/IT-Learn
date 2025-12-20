@@ -46,6 +46,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           # 部署文档
-          branch: main
+          token: ${{ secrets.DEPLOY_TOKEN }}  # 需要 Personal Access Token
           repository-name: IT-PXS/IT-Learn
+          branch: main
           folder: src/.vuepress/dist
