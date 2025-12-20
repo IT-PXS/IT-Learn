@@ -14,7 +14,7 @@ EventLoopGroup 是一组 EventLoop 的抽象，Netty 为了更好的利用多核
 
 通常一个服务端口即一个 ServerSocketChannel 对应一个 Selector 和一个 EventLoop 线程。BossEventLoop 负责接收客户端的连接并将 SocketChannel 交给 WorkerEventLoopGroup 来进行 IO 处理，如下图所示
 
-![](netty（2-核心组件）\1.png)
+![](Netty（2-核心组件）/1.png)
 
 1. 事件循环对象（EventLoop）
 
@@ -74,7 +74,7 @@ ChannelHandler 是一个接口，处理 I/O 事件或拦截 I/O 操作，并将�
 
 ChannelHandler 用来处理 Channel 上的各种事件，分别为入站、出站两种。所有 ChannelHandler 被连成一串，就是 Pipeline。
 
-![](netty（2-核心组件）\2.png)
+![](Netty（2-核心组件）/2.png)
 
 ```java
 public class ChannelInboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelInboundHandler { 
@@ -111,9 +111,9 @@ ChannelPipeline 是一个 Handler 的集合，它负责处理和拦截 inbound �
 
 ChannelPipeline 实现了一种高级形式的拦截过滤器模式，使用户可以完全控制事件的处理方式，以及 Channel 中各个的 ChannelHandler 如何相互交互。在 Netty 中每个 Channel 都有且仅有一个 ChannelPipeline 与之对应
 
-![](netty（2-核心组件）\3.png)
+![](Netty（2-核心组件）/3.png)
 
-![](netty（2-核心组件）\4.png)
+![](Netty（2-核心组件）/4.png)
 
 **调用顺序**
 
@@ -144,7 +144,7 @@ ChannelHandlerContext 代表了 ChannelHandler 和 ChannelPipeline 之间的关�
 
 ChannelHandlerContext 的主要功能是管理它所关联的 ChannelHandler 和在同一个 ChannelPipeline 中的其他 ChannelHandler 之间的交互。事件从一个 ChannelHandler 到下一个 ChannelHandler 的移动是由 ChannelHandlerContext 上的调用完成的。
 
-![](netty（2-核心组件）\5.png)
+![](Netty（2-核心组件）/5.png)
 
 但是有些时候不希望总是从 ChannelPipeline 的第一个 ChannelHandler 开始事件，我们希望从一个特定的 ChannelHandler 开始处理。
 
@@ -173,4 +173,4 @@ ctx.channel().write(Unpooled.copiedBuffer("Netty in Action", CharsetUtil.UTF_8))
 
 ## ChannelOption
 
-![](netty（2-核心组件）\6.png)
+![](Netty（2-核心组件）/6.png)

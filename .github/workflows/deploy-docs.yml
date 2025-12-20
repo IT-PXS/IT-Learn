@@ -47,4 +47,5 @@ jobs:
         with:
           # 部署文档
           branch: main
+          repository-name: IT-PXS/IT-Learn
           folder: src/.vuepress/dist

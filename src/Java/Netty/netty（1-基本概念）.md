@@ -76,14 +76,14 @@ Netty 针对这种情况，使用了 NIO 中的另一大特性——零拷贝，
 
 ### Netty 模型
 
-![](netty（1-基本概念）/1.png)
+![](Netty（1-基本概念）/1.png)
 
 1. BossGroup 线程维护 Selector，只关注 Accecpt，当接收到 Accept 事件，获取到对应的 SocketChannel，封装成 NIOScoketChannel 并注册到 WorkerGroup 线程（事件循环），并进行维护
 2. WorkerGroup 线程监听到 Selector 中通道发生自己感兴趣的事件后，就进行处理（由 handler），注意 handler 已经加入到通道
 
-![](netty（1-基本概念）/2.png)
+![](Netty（1-基本概念）/2.png)
 
-![](netty（1-基本概念）/3.png)
+![](Netty（1-基本概念）/3.png)
 
 1. bossGroup 会处理建立连接的请求，为新连接生成一个子 Channel，将其注册到 workerGroup 中的其中一个 EventLoop，于是这个 Channel 的整个生命周期都由这个 EventLoop 来处理，这个 EventLoop 会不断地循环此 Channel 是否有事件发生，有则处理之。
 2. 而一个 EventLoop 只会与一个线程绑定，所以是线程安全的。不过，一个 EventLoop 可以与多个 Channel 绑定
@@ -95,7 +95,7 @@ Netty 针对这种情况，使用了 NIO 中的另一大特性——零拷贝，
 
 ### 处理流程
 
-![](netty（1-基本概念）/4.png)
+![](Netty（1-基本概念）/4.png)
 
 1. Netty 抽象出两组线程池 BossGroup 专门负责接收客户端的连接，WorkerGroup 专门负责网络的读写
 2. BossGroup 和 WorkerGroup 类型都是 NioEventLoopGroup。NioEventLoopGroup 相当于一个事件循环组，这个组中含有多个事件循环，每一个事件循环是 NioEventLoop
@@ -117,7 +117,7 @@ Netty 针对这种情况，使用了 NIO 中的另一大特性——零拷贝，
 
 5. 每个 Worker NIOEventLoop 处理业务时，会使用 pipeline（管道），pipeline 中包含了 channel，即通过 pipeline 可以获取到对应通道，管道中维护了很多的处理器
 
-![](netty（1-基本概念）/5.png)
+![](Netty（1-基本概念）/5.png)
 
 ### 工作流程
 
@@ -155,7 +155,7 @@ bossGroup 用来接入新的连接，当接收到 Accept 事件，获取到对�
 
 Netty 中的 I/O 操作是异步的，包括 Bind、Write、Connect 等操作会简单的返回一个 ChannelFuture。调用者并不能立刻获得结果，而是通过 Future-Listener 机制，用户可以方便的主动获取或者通过通知机制获得 IO 操作结果
 
-![](netty（1-基本概念）/6.png)
+![](Netty（1-基本概念）/6.png)
 
 **Future-Listener 机制**
 
@@ -200,11 +200,11 @@ cf.addListener(new ChannelFutureListener() {
 
 不必再为每个连接创建线程，将连接完成后的业务处理任务分配给线程进行处理，一个线程可以处理多个连接的业务。
 
-![](netty（1-基本概念）/7.png)
+![](Netty（1-基本概念）/7.png)
 
 ### Reactor 模式核心组成
 
-![](netty（1-基本概念）/8.png)
+![](Netty（1-基本概念）/8.png)
 
 Reactor 模式（设计思想：I/O 复用结合线程池），通过一个或多个输入同时传递给服务处理器的模式（基于事件驱动）。服务器端程序处理传入的多个请求，并将它们同步分派到相应的处理线程，因此 Reactor（反应器）模式也叫 Dispatcher（分发者） 模式
 
@@ -217,7 +217,7 @@ Reactor 模式由 Reactor 线程、Handlers 处理器两大角色组成，两大
 
 ### 单线程模型
 
-![](netty（1-基本概念）/9.png)
+![](Netty（1-基本概念）/9.png)
 
 在 Reactor 单线程模型中，所有 I/O 操作（包括连接建立、数据读写、事件分发等）、业务处理，都是由一个线程完成的。单线程模型逻辑简单，缺陷也十分明显：
 
@@ -230,7 +230,7 @@ Reactor 模式由 Reactor 线程、Handlers 处理器两大角色组成，两大
 
 ### 多线程模型
 
-![](netty（1-基本概念）/10.png)
+![](Netty（1-基本概念）/10.png)
 
 Reactor 多线程模型将业务逻辑交给多个线程进行处理。除此之外，多线程模型其他的操作与单线程模型是类似的，比如连接建立、IO 事件读写以及事件分发等都是由一个线程来完成。
 
@@ -242,7 +242,7 @@ Reactor 多线程模型将业务逻辑交给多个线程进行处理。除此之
 
 ### 主从多线程模型
 
-![](netty（1-基本概念）/11.png)
+![](Netty（1-基本概念）/11.png)
 
 主从 Reactor 模式中，分为了主 Reactor 和 从 Reactor，分别处理 新建立的连接、IO 读写事件/事件分发。
 

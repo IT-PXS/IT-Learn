@@ -718,7 +718,7 @@ netty 中的 Future 与 jdk 中的 Future 同名，但是是两个接口，netty
 2. netty Future 可以同步等待任务结束得到结果，也可以异步方式得到结果，但都是要等任务结束；
 3. netty Promise 不仅有 netty Future 的功能，而且脱离了任务独立存在，只作为两个线程间传递结果的容器
 
-![](netty（3-基本使用）/8.png)
+![](Netty（3-基本使用）/8.png)
 
 **JDK Future**
 
@@ -1155,7 +1155,7 @@ NIO 中经常使用的 ByteBuffer，但它还有一些缺陷：
 
 所以 Netty 为了解决 ByteBuffer 的这些缺陷，设计了 ByteBuf。
 
-![](netty（3-基本使用）/9.png)
+![](Netty（3-基本使用）/9.png)
 
 1. 从 ByteBuf 中每读取一个字节，readerIndex 自增 1，ByteBuf 里面总共有 writerIndex-readerIndex 个字节可读，由此可以推论出当 readerIndex 与 writerIndex 相等的时候，ByteBuf 不可读。
 2. 写数据是从 writerIndex 指向的部分开始写，每写一个字节，writerIndex 自增 1，直到增到 capacity，这个时候，表示 ByteBuf 已经不可写了。
@@ -1199,7 +1199,7 @@ ByteBuf buf2 = ByteBufAllocator.DEFAULT.heapBuffer(); //池化，堆内存
 
 2. 非池化：如果操作后，再创建
 
-![](netty（3-基本使用）/10.png)
+![](Netty（3-基本使用）/10.png)
 
 ```java
 ByteBuf buf1 = ByteBufAllocator.DEFAULT.buffer(); //非池化，直接内存

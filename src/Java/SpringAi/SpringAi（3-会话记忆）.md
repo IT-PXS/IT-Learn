@@ -187,12 +187,11 @@ public interface ChatMemoryRepository {
 
 1. InMemoryChatMemoryRepository：表示上下文消息存储在内存中
 
-2. JdbcChatMemoryRepository：表示使用 JDBC 在关系数据库中存储消息，支持 PostgreSQL、MySQL / 
-
-   MariaDB、SQL Server、HSQLDB 等数据库
+2. JdbcChatMemoryRepository：表示使用 JDBC 在关系数据库中存储消息，支持 PostgreSQL、MySQL、MariaDB、SQL Server、HSQLDB 等数据库
 
 3. CassandraChatMemoryRepository：表示使用 Apache Cassandra 分布式数据库存储消息
-   Neo4jChatMemoryRepository 表示将聊天消息作为节点和关系存储在 Neo4j 图数据库
+
+4. Neo4jChatMemoryRepository：表示将聊天消息作为节点和关系存储在 Neo4j 图数据库
 
 ### 内置 Advisor
 
@@ -420,9 +419,9 @@ logging:
     org.springframework.ai: debug # AI对话的日志级别
 ```
 
-1. `spring.ai.chat.memory.repository.jdbc.initialize-schema`：控制初始化 Schema 的时机。可选值：embedded（默认）、always（总是创建）、never（从不创建）。默认为 embedded
+1. `spring.ai.chat.memory.repository.jdbc.initialize-schema`：控制初始化 Schema 的时机。可选值：embedded（默认）、always（总是创建）、never（从不创建）。
 
-2. `spring.ai.chat.memory.repository.jdbc.schema`：用于初始化的 Schema 脚本位置。支持 classpath: URL 及平台占位符。默认为 classpath: org/springframework/ai/chat/memory/repository/jdbc/schema-@@platform@@.sql
+2. `spring.ai.chat.memory.repository.jdbc.schema`：用于初始化的 Schema 脚本位置，支持 classpath: URL 及平台占位符。默认为 classpath: org/springframework/ai/chat/memory/repository/jdbc/schema-@@platform@@.sql
 
 3. `spring.ai.chat.memory.repository.jdbc.platform`：若初始化脚本中使用 @@platform@@ 占位符，则指定其对应的平台标识。默认为 auto-detected
 

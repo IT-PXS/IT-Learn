@@ -13,7 +13,7 @@ date: 2025-11-05 22:38:34
 
 codec（编解码器）的组成部分有两个：decoder（解码器）和 encoder（编码器）。encoder 负责把业务数据转换成字节码数据，decoder 负责把字节码数据转换成业务数据
 
-![](netty（5-编码和解码）/1.png)
+![](Netty（5-编码和解码）/1.png)
 
 ## Netty 编码解码机制
 1. 当 Netty 发送或者接受一个消息的时候，就将会发生一次数据转换。入站消息会被解码：从字节转换为另一种格式（比如 java 对象）；如果是出站消息，它会被编码成字节。
@@ -38,9 +38,9 @@ public class MyMessageToMessageDecoder extends MessageToMessageDecoder<String> {
 #### ByteToMessgaeDecoder
 由于不可能知道远程节点是否会一次性发送一个完整的信息，tcp 有可能出现粘包拆包的问题，这个类会对入站数据进行缓冲，直到它准备好被处理
 
-![](netty（5-编码和解码）/2.png)
+![](Netty（5-编码和解码）/2.png)
 
-![](netty（5-编码和解码）/4.png)
+![](Netty（5-编码和解码）/4.png)
 
 ```java
 public class MyByteToMessageDecoder extends ByteToMessageDecoder {
@@ -257,4 +257,4 @@ Netty 自身提供了一些 codec(编解码器)：
 
 因此产生了 Protobuf
 
-![](netty（5-编码和解码）/3.png)
+![](Netty（5-编码和解码）/3.png)
